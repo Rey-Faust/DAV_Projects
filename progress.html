@@ -1,0 +1,3969 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>进展中项目总控中心 · DAV斯里兰卡建设</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-1: #f6fafc;
+        --bg-2: #e8f1f8;
+        --surface: rgba(255, 255, 255, 0.97);
+        --line: rgba(30, 52, 66, 0.14);
+        --text-main: #1a2b36;
+        --text-soft: #5b7384;
+        --accent: #2f6f98;
+        --accent-soft: #e8f3fb;
+        --warn: #c96b36;
+        --danger: #a3412a;
+        --ok: #2d6d40;
+        --radius-lg: 20px;
+        --radius-md: 12px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+        color: var(--text-main);
+        background: radial-gradient(circle at 6% 8%, rgba(137, 177, 204, 0.35), transparent 34%),
+          radial-gradient(circle at 94% 86%, rgba(211, 225, 239, 0.9), transparent 36%),
+          linear-gradient(145deg, var(--bg-1), var(--bg-2));
+        padding: 22px 14px;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4 {
+        font-family: "Barlow", "Noto Sans SC", sans-serif;
+      }
+
+      .shell {
+        width: min(1260px, 100%);
+        margin: 0 auto;
+      }
+
+      .page-head {
+        display: flex;
+        gap: 12px;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 12px;
+      }
+
+      .page-head h1 {
+        margin: 0;
+        font-size: clamp(26px, 4vw, 40px);
+      }
+
+      .page-head p {
+        margin: 6px 0 0;
+        color: var(--text-soft);
+      }
+
+      .header-actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .lang-switch {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .lang-btn {
+        border: 1px solid rgba(25, 50, 64, 0.22);
+        border-radius: 999px;
+        background: #f2f7fb;
+        color: #204256;
+        font: inherit;
+        font-size: 12px;
+        padding: 6px 10px;
+        cursor: pointer;
+      }
+
+      .lang-btn.active {
+        background: #1f465d;
+        border-color: #1f465d;
+        color: #ffffff;
+      }
+
+      .ghost-btn,
+      .admin-toggle,
+      .quick-btn,
+      .tab-btn,
+      .mini-btn,
+      .danger-btn {
+        border: 1px solid rgba(25, 50, 64, 0.22);
+        border-radius: 999px;
+        background: #f2f7fb;
+        color: #204256;
+        font: inherit;
+        font-size: 13px;
+        padding: 8px 13px;
+        cursor: pointer;
+        text-decoration: none;
+      }
+
+      .admin-toggle.active {
+        background: #1f465d;
+        color: #ffffff;
+        border-color: #1f465d;
+      }
+
+      .danger-btn {
+        border-color: rgba(163, 65, 42, 0.4);
+        color: #8e3320;
+        background: #ffeae4;
+      }
+
+      .panel {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+        padding: 16px;
+        box-shadow: 0 10px 28px rgba(44, 73, 94, 0.14);
+        margin-bottom: 14px;
+      }
+
+      .tip {
+        margin: 6px 2px 0;
+        min-height: 20px;
+        font-size: 13px;
+        color: var(--text-soft);
+      }
+
+      .tip.warn {
+        color: var(--danger);
+      }
+
+      .tip.ok {
+        color: var(--ok);
+      }
+
+      .filter-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 10px;
+      }
+
+      .input,
+      .select,
+      .textarea {
+        width: 100%;
+        border: 1px solid rgba(24, 52, 71, 0.24);
+        border-radius: 10px;
+        background: #ffffff;
+        color: var(--text-main);
+        font: inherit;
+        font-size: 13px;
+        padding: 9px 10px;
+      }
+
+      .textarea {
+        min-height: 84px;
+        resize: vertical;
+      }
+
+      .input:focus,
+      .select:focus,
+      .textarea:focus {
+        outline: 2px solid rgba(47, 111, 152, 0.2);
+        border-color: rgba(47, 111, 152, 0.6);
+      }
+
+      .project-list {
+        margin-top: 12px;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+        max-height: 360px;
+        overflow: auto;
+        padding-right: 4px;
+      }
+
+      .project-item {
+        border: 1px solid rgba(30, 52, 66, 0.18);
+        border-radius: 10px;
+        background: #f8fcff;
+        padding: 8px 10px;
+        cursor: pointer;
+        transition: border-color 160ms ease, box-shadow 160ms ease;
+      }
+
+      .project-item:hover {
+        border-color: rgba(47, 111, 152, 0.48);
+      }
+
+      .project-item.active {
+        border-color: rgba(47, 111, 152, 0.56);
+        box-shadow: inset 3px 0 0 rgba(47, 111, 152, 0.75);
+      }
+
+      .project-top {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .project-name-text {
+        color: #163f59;
+        font-size: 13px;
+        line-height: 1.2;
+        font-weight: 600;
+      }
+
+      .project-summary {
+        display: block;
+        margin-top: 4px;
+      }
+
+      .project-sub {
+        margin: 2px 0 0;
+        color: var(--text-soft);
+        font-size: 11px;
+        line-height: 1.35;
+      }
+
+      .project-item.dragging {
+        opacity: 0.55;
+      }
+
+      .project-item.drop-target {
+        outline: 2px dashed rgba(47, 111, 152, 0.48);
+        outline-offset: -3px;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        border-radius: 999px;
+        padding: 3px 8px;
+        font-size: 11px;
+        font-weight: 700;
+      }
+
+      .status-live {
+        background: #deecf9;
+        color: #1e5f88;
+      }
+
+      .status-delay {
+        background: #ffe6df;
+        color: #9d3f20;
+      }
+
+      .status-done {
+        background: #dff1df;
+        color: #2f6d35;
+      }
+
+      .risk-high {
+        background: #ffdcd5;
+        color: #a33d1c;
+      }
+
+      .risk-mid {
+        background: #ffeccf;
+        color: #8f5400;
+      }
+
+      .risk-low {
+        background: #e1f3e1;
+        color: #2a6d3b;
+      }
+
+      .cockpit-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: flex-start;
+      }
+
+      .cockpit-head h2 {
+        margin: 0;
+        font-size: clamp(24px, 3.2vw, 34px);
+      }
+
+      .cockpit-head p {
+        margin: 8px 0 0;
+        color: var(--text-soft);
+        font-size: 14px;
+      }
+
+      .quick-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .quick-btn {
+        background: #edf6fd;
+        border-color: rgba(47, 111, 152, 0.32);
+        color: #1f5477;
+      }
+
+      .kpi-grid {
+        margin-top: 14px;
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .kpi-card {
+        border: 1px solid rgba(30, 52, 66, 0.14);
+        border-radius: 12px;
+        background: #fbfdff;
+        padding: 10px;
+        min-height: 88px;
+      }
+
+      .kpi-title {
+        margin: 0;
+        color: var(--text-soft);
+        font-size: 12px;
+      }
+
+      .kpi-value {
+        margin: 6px 0 0;
+        font-size: 26px;
+        line-height: 1.1;
+      }
+
+      .kpi-meta {
+        margin: 4px 0 0;
+        color: var(--text-soft);
+        font-size: 12px;
+      }
+
+      .progress-track {
+        margin-top: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: #e2edf6;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, #2f6f98, #5f98c3);
+      }
+
+      .answer-grid {
+        margin-top: 12px;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .answer-item {
+        border: 1px dashed rgba(47, 111, 152, 0.28);
+        border-radius: 11px;
+        background: #f5fbff;
+        padding: 8px 10px;
+      }
+
+      .answer-item h4 {
+        margin: 0;
+        font-size: 12px;
+        color: #2f6488;
+      }
+
+      .answer-item p {
+        margin: 5px 0 0;
+        font-size: 13px;
+      }
+
+      .alert-list {
+        margin-top: 12px;
+        display: grid;
+        gap: 8px;
+      }
+
+      .alert-item {
+        border: 1px solid rgba(201, 107, 54, 0.35);
+        border-radius: 10px;
+        background: #fff5ed;
+        color: #8d4f26;
+        padding: 8px 10px;
+        font-size: 13px;
+      }
+
+      .tabs {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .tab-btn.active {
+        background: #1f465d;
+        border-color: #1f465d;
+        color: #ffffff;
+      }
+
+      .tab-pane {
+        margin-top: 12px;
+        display: none;
+      }
+
+      .tab-pane.active {
+        display: block;
+      }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .subpanel {
+        border: 1px solid rgba(30, 52, 66, 0.14);
+        border-radius: 12px;
+        background: #fcfeff;
+        padding: 12px;
+      }
+
+      .subpanel h3 {
+        margin: 0 0 10px;
+        font-size: 20px;
+      }
+
+      .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .info-item {
+        border: 1px solid rgba(30, 52, 66, 0.12);
+        border-radius: 10px;
+        background: #f7fbfe;
+        padding: 8px;
+      }
+
+      .info-key {
+        margin: 0;
+        color: var(--text-soft);
+        font-size: 12px;
+      }
+
+      .info-value {
+        margin: 4px 0 0;
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      .stage-track {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding-bottom: 4px;
+      }
+
+      .stage-chip {
+        flex: 0 0 auto;
+        border: 1px solid rgba(30, 52, 66, 0.2);
+        border-radius: 999px;
+        padding: 6px 10px;
+        font-size: 12px;
+        white-space: nowrap;
+        background: #f3f8fc;
+      }
+
+      .chip-pending {
+        background: #f0f4f8;
+        color: #4f6676;
+      }
+
+      .chip-progress {
+        background: #e1eef9;
+        color: #1f5d87;
+      }
+
+      .chip-done {
+        background: #e0f3e3;
+        color: #2a6b33;
+      }
+
+      .chip-delay {
+        background: #ffe4dc;
+        color: #9d3e20;
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 860px;
+      }
+
+      th,
+      td {
+        border-bottom: 1px solid rgba(30, 52, 66, 0.12);
+        padding: 10px 8px;
+        text-align: left;
+        font-size: 13px;
+        vertical-align: top;
+      }
+
+      th {
+        color: #35556a;
+        font-weight: 700;
+      }
+
+      .inline-status {
+        border-radius: 999px;
+        border: 1px solid rgba(30, 52, 66, 0.2);
+        padding: 3px 8px;
+        font-size: 12px;
+        background: #f5f9fc;
+      }
+
+      .list-stack {
+        display: grid;
+        gap: 8px;
+      }
+
+      .list-stack.drag-target {
+        outline: 2px dashed rgba(47, 111, 152, 0.4);
+        outline-offset: 2px;
+        border-radius: 8px;
+      }
+
+      .task-card,
+      .log-card,
+      .file-card {
+        border: 1px solid rgba(30, 52, 66, 0.16);
+        border-radius: 11px;
+        background: #fbfeff;
+        padding: 10px;
+      }
+
+      .task-head,
+      .log-head,
+      .file-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        align-items: flex-start;
+      }
+
+      .task-title,
+      .log-title,
+      .file-title {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      .task-card.draggable,
+      .stage-row.draggable {
+        cursor: grab;
+      }
+
+      .task-card.dragging,
+      .stage-row.dragging {
+        opacity: 0.55;
+      }
+
+      .task-card.drop-target,
+      .stage-row.drop-target {
+        outline: 2px dashed rgba(47, 111, 152, 0.45);
+        outline-offset: -3px;
+      }
+
+      .muted {
+        color: var(--text-soft);
+        font-size: 12px;
+      }
+
+      .tags {
+        margin-top: 6px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        border-radius: 999px;
+        background: #edf3f7;
+        color: #315367;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 3px 8px;
+      }
+
+      .tag.urgent {
+        background: #ffe2d9;
+        color: #9a381b;
+      }
+
+      .tag.delay {
+        background: #ffe9cf;
+        color: #8f5600;
+      }
+
+      .tag.done {
+        background: #e0f2e3;
+        color: #2b6a36;
+      }
+
+      .inline-form {
+        margin-top: 12px;
+        border: 1px dashed rgba(30, 52, 66, 0.25);
+        border-radius: 12px;
+        padding: 10px;
+        background: #f7fbfe;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .form-grid label,
+      .single-col label {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        font-size: 12px;
+        color: #3d5d72;
+        font-weight: 700;
+      }
+
+      .single-col {
+        margin-top: 8px;
+        display: grid;
+        gap: 8px;
+      }
+
+      .form-actions {
+        margin-top: 10px;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .mini-btn {
+        padding: 6px 10px;
+        font-size: 12px;
+      }
+
+      .photo-strip,
+      .file-strip {
+        margin-top: 8px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .photo-chip,
+      .file-chip {
+        border: 1px solid rgba(30, 52, 66, 0.2);
+        border-radius: 999px;
+        background: #edf4fa;
+        font-size: 12px;
+        color: #2f5166;
+        padding: 4px 8px;
+      }
+
+      .site-footer {
+        margin: 8px 6px 4px;
+        text-align: center;
+        color: #8a99a5;
+        font-size: 12px;
+      }
+
+      @media (max-width: 980px) {
+        .kpi-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .project-list {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .answer-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .form-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 760px) {
+        .filter-grid,
+        .grid-2,
+        .kpi-grid,
+        .answer-grid,
+        .form-grid,
+        .info-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .project-list {
+          grid-template-columns: 1fr;
+        }
+
+        .page-head {
+          flex-direction: column;
+        }
+
+        .cockpit-head {
+          flex-direction: column;
+        }
+
+        table {
+          min-width: 0;
+        }
+
+        thead {
+          display: none;
+        }
+
+        tbody {
+          display: grid;
+          gap: 8px;
+        }
+
+        tr {
+          display: block;
+          border: 1px solid rgba(30, 52, 66, 0.16);
+          border-radius: 10px;
+          padding: 8px;
+          background: #ffffff;
+        }
+
+        td {
+          display: grid;
+          grid-template-columns: 90px 1fr;
+          gap: 8px;
+          padding: 6px 0;
+          border-bottom: 1px dashed rgba(30, 52, 66, 0.16);
+        }
+
+        td::before {
+          content: attr(data-label);
+          color: #3a5a71;
+          font-weight: 700;
+        }
+
+        td:last-child {
+          border-bottom: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <header class="page-head">
+        <div>
+          <h1>进展中项目总控中心 / Active Project Control Center</h1>
+        </div>
+        <div class="header-actions">
+          <a class="ghost-btn" href="index.html">返回首页 / Back Home</a>
+          <button class="admin-toggle" id="adminToggle" type="button" aria-pressed="false">管理员模式 / Admin</button>
+          <div class="lang-switch" id="langSwitch" data-no-i18n>
+            <button class="lang-btn" type="button" data-lang="zh">中文</button>
+            <button class="lang-btn" type="button" data-lang="en">EN</button>
+          </div>
+        </div>
+      </header>
+
+      <p class="tip" id="pageTip" role="status" aria-live="polite"></p>
+
+      <section class="panel">
+        <div class="filter-grid">
+          <input class="input" id="projectSearch" type="text" placeholder="搜索项目 / 客户 / 地址 / 负责人 / Search project/client/address/owner" />
+          <select class="select" id="statusFilter">
+            <option value="all">全部状态 / All</option>
+            <option value="施工中">施工中 / In Progress</option>
+            <option value="待开工">待开工 / Pending Start</option>
+            <option value="验收阶段">验收阶段 / Acceptance</option>
+            <option value="已交付">已交付 / Delivered</option>
+          </select>
+        </div>
+        <div class="project-list" id="projectList"></div>
+      </section>
+
+      <section class="panel" id="cockpitPanel">
+        <div class="cockpit-head">
+          <div>
+            <h2 id="projectTitle">-</h2>
+            <p id="projectSubtitle">-</p>
+          </div>
+          <div class="quick-actions" data-admin-only hidden>
+            <button class="quick-btn" type="button" data-action="project-create">新增项目 / Add Project</button>
+            <button class="quick-btn" type="button" data-action="project-edit">编辑项目 / Edit Project</button>
+            <button class="quick-btn danger-btn" type="button" data-action="project-delete">删除项目 / Delete</button>
+            <button class="quick-btn" type="button" data-action="task">新增任务 / Add Task</button>
+            <button class="quick-btn" type="button" data-action="issue">新增问题 / Add Issue</button>
+            <button class="quick-btn" type="button" data-action="log">提交日报 / Add Log</button>
+            <button class="quick-btn" type="button" data-action="file">上传文件 / Upload File</button>
+            <button class="quick-btn" type="button" data-action="stage-add">新增阶段 / Add Stage</button>
+          </div>
+        </div>
+
+        <div class="kpi-grid" id="kpiGrid"></div>
+        <div class="answer-grid" id="answerGrid"></div>
+        <div class="alert-list" id="alertList"></div>
+      </section>
+
+      <section class="panel">
+        <div class="tabs" id="tabBar">
+          <button class="tab-btn active" type="button" data-tab="overview">概览 / Overview</button>
+          <button class="tab-btn" type="button" data-tab="tasks">任务 / Tasks</button>
+          <button class="tab-btn" type="button" data-tab="issues">问题 / Issues</button>
+          <button class="tab-btn" type="button" data-tab="logs">现场记录 / Logs</button>
+          <button class="tab-btn" type="button" data-tab="assets">材料文件 / Assets</button>
+        </div>
+
+        <div class="tab-pane active" data-pane="overview">
+          <div class="grid-2">
+            <div class="subpanel">
+              <h3>项目概览信息 / Project Summary</h3>
+              <div class="info-grid" id="baseInfo"></div>
+            </div>
+            <div class="subpanel">
+              <h3>阶段流程条 / Stage Flow</h3>
+              <div class="stage-track" id="stageTrack"></div>
+            </div>
+          </div>
+          <div class="subpanel" style="margin-top: 12px">
+            <h3>阶段进度明细 / Stage Details</h3>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>阶段 / Stage</th>
+                    <th>状态 / Status</th>
+                    <th>开始 / Start</th>
+                    <th>计划完成 / Planned End</th>
+                    <th>实际完成 / Actual End</th>
+                    <th>负责人 / Owner</th>
+                    <th>备注 / Notes</th>
+                    <th id="stageActionHeader">操作 / Action</th>
+                  </tr>
+                </thead>
+                <tbody id="stageTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="subpanel" style="margin-top: 12px">
+            <h3>费用与回款 / Finance</h3>
+            <div class="info-grid" id="financeBoard"></div>
+          </div>
+        </div>
+
+        <div class="tab-pane" data-pane="tasks">
+          <div class="grid-2">
+            <div class="subpanel">
+              <h3>今日任务 / Today</h3>
+              <div class="list-stack" id="todayTaskList"></div>
+            </div>
+            <div class="subpanel">
+              <h3>本周关键任务 / This Week</h3>
+              <div class="list-stack" id="weekTaskList"></div>
+            </div>
+          </div>
+
+          <form class="inline-form" id="taskForm" data-admin-only hidden>
+            <div class="form-grid">
+              <label>
+                任务内容 / Task
+                <input class="input" name="title" required />
+              </label>
+              <label>
+                负责人 / Owner
+                <input class="input" name="owner" required />
+              </label>
+              <label>
+                截止日期 / Due
+                <input class="input" type="date" name="due" required />
+              </label>
+              <label>
+                类型 / Bucket
+                <select class="select" name="bucket">
+                  <option value="today">今日任务 / Today</option>
+                  <option value="week">本周任务 / Week</option>
+                </select>
+              </label>
+            </div>
+            <div class="form-actions">
+              <label class="muted"><input type="checkbox" name="impact" /> 影响工期 / Impacts Timeline</label>
+              <label class="muted"><input type="checkbox" name="needMe" /> 需要我介入 / Need Me</label>
+              <button class="mini-btn" type="submit">新增任务 / Add Task</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="tab-pane" data-pane="issues">
+          <div class="subpanel">
+            <h3>问题与风险中心 / Issues & Risks</h3>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>标题 / Title</th>
+                    <th>类型 / Type</th>
+                    <th>责任人 / Owner</th>
+                    <th>状态 / Status</th>
+                    <th>截止 / Due</th>
+                    <th>影响工期 / Impact</th>
+                    <th>描述 / Description</th>
+                    <th id="issueActionHeader">操作 / Action</th>
+                  </tr>
+                </thead>
+                <tbody id="issueTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <form class="inline-form" id="issueForm" data-admin-only hidden>
+            <div class="form-grid">
+              <label>
+                问题标题 / Issue Title
+                <input class="input" name="title" required />
+              </label>
+              <label>
+                类型 / Type
+                <select class="select" name="type">
+                  <option>材料 / Material</option>
+                  <option>图纸 / Drawing</option>
+                  <option>工人 / Labor</option>
+                  <option>客户确认 / Client Confirmation</option>
+                  <option>物业 / Property</option>
+                  <option>付款 / Payment</option>
+                  <option>现场条件 / Site Condition</option>
+                </select>
+              </label>
+              <label>
+                责任人 / Owner
+                <input class="input" name="owner" required />
+              </label>
+              <label>
+                截止日期 / Due
+                <input class="input" type="date" name="due" required />
+              </label>
+            </div>
+            <div class="single-col">
+              <label>
+                问题描述 / Description
+                <textarea class="textarea" name="desc" required></textarea>
+              </label>
+            </div>
+            <div class="form-actions">
+              <label class="muted"><input type="checkbox" name="impact" /> 影响工期 / Impacts Timeline</label>
+              <button class="mini-btn" type="submit">登记问题 / Add Issue</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="tab-pane" data-pane="logs">
+          <div class="subpanel">
+            <h3>现场日志时间线 / Site Timeline</h3>
+            <div class="list-stack" id="logList"></div>
+          </div>
+
+          <form class="inline-form" id="logForm" data-admin-only hidden>
+            <div class="form-grid">
+              <label>
+                日期 / Date
+                <input class="input" type="date" name="date" required />
+              </label>
+              <label>
+                记录人 / Author
+                <input class="input" name="author" required />
+              </label>
+              <label>
+                所属阶段 / Stage
+                <input class="input" name="stage" required />
+              </label>
+              <label>
+                现场图片 / Photos
+                <input class="input" type="file" name="photos" multiple />
+              </label>
+            </div>
+            <div class="single-col">
+              <label>
+                记录内容 / Content
+                <textarea class="textarea" name="content" required></textarea>
+              </label>
+            </div>
+            <div class="form-actions">
+              <label class="muted"><input type="checkbox" name="followUp" /> 需要跟进 / Need Follow-up</label>
+              <button class="mini-btn" type="submit">提交记录 / Add Log</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="tab-pane" data-pane="assets">
+          <div class="grid-2">
+            <div class="subpanel">
+              <h3>材料与采购 / Materials</h3>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>材料 / Material</th>
+                      <th>规格 / Spec</th>
+                      <th>数量 / Qty</th>
+                      <th>供应商 / Vendor</th>
+                      <th>下单 / Order</th>
+                      <th>到货 / Arrival</th>
+                      <th>安装 / Install</th>
+                      <th>负责人 / Owner</th>
+                      <th>预计到场 / ETA</th>
+                      <th id="materialActionHeader">操作 / Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="materialTableBody"></tbody>
+                </table>
+              </div>
+
+              <form class="inline-form" id="materialForm" data-admin-only hidden>
+                <div class="form-grid">
+                  <label>
+                    材料名称 / Name
+                    <input class="input" name="name" required />
+                  </label>
+                  <label>
+                    规格型号 / Spec
+                    <input class="input" name="spec" required />
+                  </label>
+                  <label>
+                    数量 / Qty
+                    <input class="input" name="qty" required />
+                  </label>
+                  <label>
+                    供应商 / Vendor
+                    <input class="input" name="supplier" required />
+                  </label>
+                </div>
+                <div class="form-grid" style="margin-top: 8px">
+                  <label>
+                    下单状态 / Order
+                    <select class="select" name="orderStatus">
+                      <option>待确认 / Pending Confirm</option>
+                      <option>待采购 / Pending Purchase</option>
+                      <option>已下单 / Ordered</option>
+                    </select>
+                  </label>
+                  <label>
+                    到货状态 / Arrival
+                    <select class="select" name="arrivalStatus">
+                      <option>待到货 / Pending Arrival</option>
+                      <option>已到货 / Arrived</option>
+                    </select>
+                  </label>
+                  <label>
+                    安装状态 / Install
+                    <select class="select" name="installStatus">
+                      <option>待安装 / Pending Install</option>
+                      <option>已安装 / Installed</option>
+                    </select>
+                  </label>
+                  <label>
+                    预计到场 / ETA
+                    <input class="input" type="date" name="eta" required />
+                  </label>
+                </div>
+                <div class="form-actions">
+                  <label class="muted">
+                    负责人 / Owner
+                    <input class="input" name="owner" style="width: 150px" required />
+                  </label>
+                  <button class="mini-btn" type="submit">新增材料 / Add Material</button>
+                </div>
+              </form>
+            </div>
+
+            <div class="subpanel">
+              <h3>文件与图纸 / Files</h3>
+              <div class="list-stack" id="fileList"></div>
+
+              <form class="inline-form" id="fileForm" data-admin-only hidden>
+                <div class="form-grid">
+                  <label>
+                    文件类型 / Type
+                    <select class="select" name="type">
+                      <option>合同 / Contract</option>
+                      <option>报价单 / Quotation</option>
+                      <option>平面图 / Layout</option>
+                      <option>施工图 / Construction Drawing</option>
+                      <option>机电图 / MEP Drawing</option>
+                      <option>变更单 / Variation Order</option>
+                      <option>验收单 / Acceptance</option>
+                      <option>付款记录 / Payment Record</option>
+                      <option>聊天纪要 / Meeting Note</option>
+                    </select>
+                  </label>
+                  <label>
+                    版本号 / Version
+                    <input class="input" name="version" placeholder="v1.0 / v1.0" required />
+                  </label>
+                  <label>
+                    上传人 / Uploader
+                    <input class="input" name="uploader" required />
+                  </label>
+                  <label>
+                    选择文件 / File
+                    <input class="input" type="file" name="file" required />
+                  </label>
+                </div>
+                <div class="form-actions">
+                  <label class="muted"><input type="checkbox" name="latest" checked /> 标记最新版 / Mark Latest</label>
+                  <button class="mini-btn" type="submit">上传文件 / Upload</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="site-footer">© DAV斯里兰卡建设 / DAV Sri Lanka Construction</footer>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+window.SUPABASE_CONFIG = {
+  url: "https://xempiktvowavuedckoaa.supabase.co",
+  anonKey: "sb_publishable_bRUulAMMrXoppb1pdrFjLg_4tGVSpb0",
+  table: "negotiation_projects",
+  negotiationTable: "negotiation_projects",
+  storageBucket: "negotiation-files",
+  progressTable: "progress_projects",
+  progressStorageBucket: "progress-files",
+};
+    </script>
+    <script>
+(() => {
+  const LANG_KEY = "dav_lang_pref_v1";
+  const langSwitch = document.getElementById("langSwitch");
+  const langButtons = langSwitch ? Array.from(langSwitch.querySelectorAll("[data-lang]")) : [];
+  const fallbackLexicon = {
+    "进展中项目总控中心": "Active Project Control Center",
+    "返回首页": "Back Home",
+    "管理员模式": "Admin Mode",
+    "搜索项目 / 客户 / 地址 / 负责人": "Search project/client/address/owner",
+    "全部状态": "All",
+    "施工中": "In Progress",
+    "待开工": "Pending Start",
+    "验收阶段": "Acceptance",
+    "已交付": "Delivered",
+    "新增项目": "Add Project",
+    "编辑项目": "Edit Project",
+    "删除项目": "Delete Project",
+    "新增任务": "Add Task",
+    "新增问题": "Add Issue",
+    "提交日报": "Add Log",
+    "上传文件": "Upload File",
+    "新增阶段": "Add Stage",
+    "概览": "Overview",
+    "任务": "Tasks",
+    "问题": "Issues",
+    "现场记录": "Logs",
+    "材料文件": "Assets",
+    "项目概览信息": "Project Summary",
+    "阶段流程条": "Stage Flow",
+    "阶段进度明细": "Stage Details",
+    "阶段": "Stage",
+    "状态": "Status",
+    "开始": "Start",
+    "计划完成": "Planned End",
+    "实际完成": "Actual End",
+    "负责人": "Owner",
+    "备注": "Notes",
+    "操作": "Action",
+    "费用与回款": "Finance",
+    "今日任务": "Today",
+    "本周关键任务": "This Week",
+    "任务内容": "Task",
+    "截止日期": "Due",
+    "类型": "Type",
+    "影响工期": "Impacts Timeline",
+    "需要我介入": "Need Me",
+    "问题与风险中心": "Issues & Risks",
+    "标题": "Title",
+    "截止": "Due",
+    "描述": "Description",
+    "问题标题": "Issue Title",
+    "问题描述": "Issue Description",
+    "现场日志时间线": "Site Timeline",
+    "日期": "Date",
+    "记录人": "Author",
+    "所属阶段": "Stage",
+    "现场图片": "Photos",
+    "记录内容": "Content",
+    "需要跟进": "Need Follow-up",
+    "材料与采购": "Materials",
+    "材料": "Material",
+    "规格": "Spec",
+    "数量": "Qty",
+    "供应商": "Vendor",
+    "下单": "Order",
+    "到货": "Arrival",
+    "安装": "Install",
+    "预计到场": "ETA",
+    "材料名称": "Name",
+    "规格型号": "Spec",
+    "下单状态": "Order Status",
+    "到货状态": "Arrival Status",
+    "安装状态": "Install Status",
+    "文件与图纸": "Files",
+    "文件类型": "File Type",
+    "版本号": "Version",
+    "上传人": "Uploader",
+    "选择文件": "File",
+    "标记最新版": "Mark Latest",
+    "上传": "Upload",
+    "总体进度": "Overall Progress",
+    "当前状态": "Current Status",
+    "距离交付": "Days to Delivery",
+    "是否延期": "Delay",
+    "风险等级": "Risk Level",
+    "下个关键节点": "Next Key Milestone",
+    "现在做到哪了": "Current Stage",
+    "今天最该推进什么": "Top Priority Today",
+    "当前卡点": "Current Blocker",
+    "谁负责": "Owner",
+    "会不会延期": "Delay Risk",
+    "钱和材料状态": "Cash & Materials",
+    "未开始": "Not Started",
+    "进行中": "In Progress",
+    "已完成": "Completed",
+    "延误": "Delayed",
+    "待处理": "Open",
+    "处理中": "In Progress",
+    "已解决": "Resolved",
+    "已关闭": "Closed",
+    "待确认": "Pending Confirm",
+    "待采购": "Pending Purchase",
+    "已下单": "Ordered",
+    "已到货": "Arrived",
+    "待到货": "Pending Arrival",
+    "待安装": "Pending Install",
+    "已安装": "Installed",
+    "低": "Low",
+    "中": "Medium",
+    "高": "High",
+    "是": "Yes",
+    "否": "No",
+    "已逾期": "Overdue",
+    "完成": "Done",
+    "编辑": "Edit",
+    "删除": "Delete",
+    "合同金额": "Contract Amount",
+    "已收款": "Received",
+    "未收款": "Unreceived",
+    "已支出": "Paid",
+    "待支出": "Pending Spend",
+    "增项金额": "Change Amount",
+    "毛利预估": "Estimated Margin",
+    "付款提醒": "Payment Reminder",
+    "有未收款节点": "Unreceived milestone exists",
+    "有待支出节点": "Pending payment node exists",
+    "当前无提醒": "No reminder",
+    "自定义概览项": "Custom Overview Item",
+    "新增概览项": "Add Overview Item",
+    "自定义费用项": "Custom Finance Item",
+    "新增费用项": "Add Finance Item",
+    "名称": "Name",
+    "内容": "Content",
+    "金额": "Amount",
+    "补充信息": "Additional Info",
+    "其他费用": "Other Expense",
+    "今日无任务。": "No tasks today.",
+    "本周无关键任务。": "No key tasks this week.",
+    "暂无问题记录。": "No issue records.",
+    "暂无现场日志。": "No site logs.",
+    "暂无匹配项目。": "No matching projects.",
+    "暂无临期预警。": "No due alerts.",
+    "未命名项目": "Untitled Project",
+    "待补充": "TBD",
+    "待分配": "Unassigned",
+    "洽谈完成待启动": "Negotiation completed, pending kickoff",
+    "开工准备": "Kickoff Prep",
+    "由洽谈阶段选择转入": "Imported from negotiation queue",
+    "承接事项：": "Carry-over: ",
+    "当前状态：": "Status: ",
+    "应截止：": "Due: ",
+    "任务临期：": "Task due soon: ",
+    "问题临期：": "Issue due soon: ",
+    "材料延误：": "Material delay: ",
+    "预计": "ETA",
+    "截止": "Due",
+    "项目经理": "Project Manager",
+    "客户名称": "Client",
+    "项目地址": "Address",
+    "开工日期": "Start Date",
+    "预计完工": "Planned Finish",
+    "当前施工阶段": "Current Phase",
+    "总体进度(%)": "Progress (%)",
+    "风险：": "Risk: ",
+    "阶段：": "Phase: ",
+    "开工：": "Start: ",
+    "预计完工：": "Planned Finish: ",
+    "待处理问题：": "Open Issues: ",
+    "材料到位 + 客户确认优先": "Materials + client confirmation first",
+    "项目经理 ": "Project Manager ",
+    "暂无今日关键任务": "No critical task today",
+    "暂无明显卡点": "No obvious blocker",
+    "存在延期风险": "Delay risk",
+    "当前计划可控": "Schedule under control",
+    "办公室装修": "Office Fit-out",
+    "水电施工": "MEP Works",
+    "水电": "MEP",
+    "泥工": "Masonry",
+    "木工": "Carpentry",
+    "油漆": "Painting",
+    "清洁收尾": "Final Cleaning",
+    "验收": "Acceptance",
+    "交付": "Handover",
+    "图纸确认": "Drawing Confirmation",
+    "报价/合同": "Quote/Contract",
+    "现场测量": "Site Survey",
+    "拆除": "Demolition",
+    "安装": "Installation",
+    "现场巡查": "Site Inspection",
+    "客户确认": "Client Confirmation",
+    "图纸": "Drawing",
+    "工人": "Labor",
+    "物业": "Property",
+    "付款": "Payment",
+    "现场条件": "Site Condition",
+    "需跟进": "Follow-up Needed",
+    "已记录": "Recorded",
+    "DAV斯里兰卡建设": "DAV Sri Lanka Construction",
+    "「": "\"",
+    "」": "\"",
+    "（": "(",
+    "）": ")",
+    "：": ": ",
+    "，": ", ",
+    "。": ".",
+  };
+  const fallbackPairs = Object.entries(fallbackLexicon).sort((a, b) => b[0].length - a[0].length);
+  const AUTO_TRANSLATE_CACHE_KEY = "dav_i18n_auto_cache_v1";
+  const hasHan = (text) => /[\u3400-\u9fff]/.test(text);
+  const autoCache = (() => {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(AUTO_TRANSLATE_CACHE_KEY) || "{}");
+      return parsed && typeof parsed === "object" ? parsed : {};
+    } catch (_error) {
+      return {};
+    }
+  })();
+  const autoPending = new Set();
+  const saveAutoCache = () => {
+    try {
+      localStorage.setItem(AUTO_TRANSLATE_CACHE_KEY, JSON.stringify(autoCache));
+    } catch (_error) {
+      // Ignore storage failures and keep page usable.
+    }
+  };
+  const requestAutoTranslation = (sourceText) => {
+    if (!sourceText || autoCache[sourceText] || autoPending.has(sourceText)) return;
+    autoPending.add(sourceText);
+    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(sourceText)}&langpair=zh-CN|en`;
+    fetch(url)
+      .then((response) => response.json())
+      .then((payload) => {
+        const translated =
+          payload && payload.responseData && typeof payload.responseData.translatedText === "string"
+            ? payload.responseData.translatedText.trim()
+            : "";
+        if (!translated || translated === sourceText) return;
+        autoCache[sourceText] = translated;
+        saveAutoCache();
+        if (getLang() === "en") localizeDOM();
+      })
+      .catch(() => {})
+      .finally(() => {
+        autoPending.delete(sourceText);
+      });
+  };
+
+  const getLang = () => (localStorage.getItem(LANG_KEY) === "en" ? "en" : "zh");
+  const translateByTokens = (text) => {
+    if (typeof text !== "string") return text;
+    let output = text;
+    fallbackPairs.forEach(([zh, en]) => {
+      if (output.includes(zh)) output = output.split(zh).join(en);
+    });
+    return output;
+  };
+  const splitLangText = (text, lang) => {
+    if (typeof text !== "string") return text;
+    const idx = text.indexOf(" / ");
+    if (idx !== -1) return lang === "en" ? text.slice(idx + 3) : text.slice(0, idx);
+    if (lang !== "en") return text;
+    const tokenTranslated = translateByTokens(text);
+    if (tokenTranslated !== text) return tokenTranslated;
+    if (!hasHan(text)) return text;
+    if (autoCache[text]) return autoCache[text];
+    requestAutoTranslation(text);
+    return text;
+  };
+
+  const shouldSkipNode = (node) => {
+    const parent = node.parentElement;
+    if (!parent) return true;
+    if (parent.closest("[data-no-i18n]")) return true;
+    return parent.tagName === "SCRIPT" || parent.tagName === "STYLE";
+  };
+
+  const localizeAttrs = (lang) => {
+    const attrNames = ["placeholder", "title", "aria-label", "data-label"];
+    document.querySelectorAll("[placeholder],[title],[aria-label],[data-label]").forEach((element) => {
+      if (element.closest("[data-no-i18n]")) return;
+      if (!element.__i18nRawAttrs) element.__i18nRawAttrs = {};
+      attrNames.forEach((attr) => {
+        const current = element.getAttribute(attr);
+        if (!current) return;
+        if (!element.__i18nRawAttrs[attr]) {
+          element.__i18nRawAttrs[attr] = current;
+        }
+        const translated = splitLangText(element.__i18nRawAttrs[attr], lang);
+        element.setAttribute(attr, translated);
+      });
+    });
+  };
+
+  const localizeDOM = (root = document.body) => {
+    const lang = getLang();
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode(node) {
+        if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        if (shouldSkipNode(node)) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      },
+    });
+
+    let current;
+    while ((current = walker.nextNode())) {
+      if (!current.__i18nRawText) {
+        current.__i18nRawText = current.nodeValue;
+      }
+      current.nodeValue = splitLangText(current.__i18nRawText, lang);
+    }
+
+    localizeAttrs(lang);
+    document.documentElement.lang = lang === "en" ? "en" : "zh-CN";
+    langButtons.forEach((button) => {
+      button.classList.toggle("active", button.getAttribute("data-lang") === lang);
+    });
+  };
+
+  const setLang = (lang) => {
+    localStorage.setItem(LANG_KEY, lang);
+    localizeDOM();
+  };
+
+  langButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      setLang(button.getAttribute("data-lang") || "zh");
+    });
+  });
+
+  const t = (text) => splitLangText(text, getLang());
+  window.__davI18n = { getLang, setLang, localizeDOM, t };
+  localizeDOM();
+})();
+    </script>
+    <script>
+      (() => {
+        const ADMIN_PASSWORD = "Sri_Lanka";
+        const ADMIN_SESSION_KEY = "dav_admin_session_v1";
+        const ADMIN_SESSION_TTL_MS = 30 * 24 * 60 * 60 * 1000;
+        const STORAGE_KEY = "dav_progress_console_v1";
+        const PROGRESS_IMPORT_QUEUE_KEY = "dav_progress_import_queue_v1";
+        const SUPABASE_CONFIG = window.SUPABASE_CONFIG || {};
+        const NEGOTIATION_TABLE = SUPABASE_CONFIG.negotiationTable || "negotiation_projects";
+        const PROGRESS_TABLE = SUPABASE_CONFIG.progressTable || "progress_projects";
+        const PROGRESS_STORAGE_BUCKET = SUPABASE_CONFIG.progressStorageBucket || "progress-files";
+        const hasSupabaseConfig = Boolean(window.supabase && SUPABASE_CONFIG.url && SUPABASE_CONFIG.anonKey);
+        const supabaseClient = hasSupabaseConfig
+          ? window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey)
+          : null;
+        let supportsProgressTable = true;
+        let warnedProgressTable = false;
+        let isSyncingProgress = false;
+        let hasPendingProgressSync = false;
+        let progressSyncTimer = null;
+
+        const pageTip = document.getElementById("pageTip");
+        const adminToggle = document.getElementById("adminToggle");
+        const projectSearch = document.getElementById("projectSearch");
+        const statusFilter = document.getElementById("statusFilter");
+        const projectList = document.getElementById("projectList");
+        const projectTitle = document.getElementById("projectTitle");
+        const projectSubtitle = document.getElementById("projectSubtitle");
+        const kpiGrid = document.getElementById("kpiGrid");
+        const answerGrid = document.getElementById("answerGrid");
+        const alertList = document.getElementById("alertList");
+        const baseInfo = document.getElementById("baseInfo");
+        const financeBoard = document.getElementById("financeBoard");
+        const stageTrack = document.getElementById("stageTrack");
+        const stageTableBody = document.getElementById("stageTableBody");
+        const stageActionHeader = document.getElementById("stageActionHeader");
+        const todayTaskList = document.getElementById("todayTaskList");
+        const weekTaskList = document.getElementById("weekTaskList");
+        const issueTableBody = document.getElementById("issueTableBody");
+        const issueActionHeader = document.getElementById("issueActionHeader");
+        const logList = document.getElementById("logList");
+        const materialTableBody = document.getElementById("materialTableBody");
+        const materialActionHeader = document.getElementById("materialActionHeader");
+        const fileList = document.getElementById("fileList");
+        const tabBar = document.getElementById("tabBar");
+        const quickButtons = Array.from(document.querySelectorAll("[data-action]"));
+        const adminOnlyBlocks = Array.from(document.querySelectorAll("[data-admin-only]"));
+        const negotiationCandidateList = document.getElementById("negotiationCandidateList");
+        const refreshNegotiationCandidatesBtn = document.getElementById("refreshNegotiationCandidates");
+        const toggleSelectAllNegotiationBtn = document.getElementById("toggleSelectAllNegotiation");
+        const addSelectedNegotiationProjectsBtn = document.getElementById("addSelectedNegotiationProjects");
+
+        const forms = {
+          task: document.getElementById("taskForm"),
+          issue: document.getElementById("issueForm"),
+          log: document.getElementById("logForm"),
+          material: document.getElementById("materialForm"),
+          file: document.getElementById("fileForm"),
+        };
+
+        const defaultProjects = [
+          {
+            id: "wtc-l14",
+            name: "WTC L14 办公室装修",
+            client: "WTC Commercial",
+            address: "Colombo 02",
+            manager: "PM",
+            startDate: "2026-03-01",
+            endDate: "2026-04-30",
+            status: "施工中",
+            phase: "水电施工",
+            progress: 42,
+            risk: "中",
+            contractAmount: 2800000,
+            received: 1200000,
+            paid: 780000,
+            pendingSpend: 320000,
+            changeAmount: 150000,
+            stages: [
+              { id: "s1", name: "现场测量", status: "已完成", start: "2026-03-01", planEnd: "2026-03-03", actualEnd: "2026-03-03", owner: "Ajan", remark: "已确认尺寸" },
+              { id: "s2", name: "图纸确认", status: "已完成", start: "2026-03-04", planEnd: "2026-03-06", actualEnd: "2026-03-06", owner: "Kavi", remark: "客户签字" },
+              { id: "s3", name: "报价/合同", status: "已完成", start: "2026-03-06", planEnd: "2026-03-08", actualEnd: "2026-03-08", owner: "PM", remark: "合同生效" },
+              { id: "s4", name: "拆除", status: "已完成", start: "2026-03-09", planEnd: "2026-03-11", actualEnd: "2026-03-11", owner: "Nuwan", remark: "无异常" },
+              { id: "s5", name: "水电", status: "进行中", start: "2026-03-12", planEnd: "2026-03-30", actualEnd: "", owner: "Dilan", remark: "东侧点位待确认" },
+              { id: "s6", name: "泥工", status: "未开始", start: "", planEnd: "2026-04-06", actualEnd: "", owner: "Chami", remark: "待材料" },
+              { id: "s7", name: "木工", status: "未开始", start: "", planEnd: "2026-04-12", actualEnd: "", owner: "Madu", remark: "待排产" },
+              { id: "s8", name: "油漆", status: "未开始", start: "", planEnd: "2026-04-18", actualEnd: "", owner: "Madu", remark: "" },
+              { id: "s9", name: "安装", status: "未开始", start: "", planEnd: "2026-04-24", actualEnd: "", owner: "Dilan", remark: "" },
+              { id: "s10", name: "清洁收尾", status: "未开始", start: "", planEnd: "2026-04-27", actualEnd: "", owner: "Nuwan", remark: "" },
+              { id: "s11", name: "验收", status: "未开始", start: "", planEnd: "2026-04-29", actualEnd: "", owner: "PM", remark: "" },
+              { id: "s12", name: "交付", status: "未开始", start: "", planEnd: "2026-04-30", actualEnd: "", owner: "PM", remark: "" }
+            ],
+            tasks: [
+              { id: "t1", title: "确认空调点位图", owner: "Kavi", due: "2026-03-27", bucket: "today", done: false, impact: true, needMe: true },
+              { id: "t2", title: "下单石膏板", owner: "Nuwan", due: "2026-03-27", bucket: "today", done: false, impact: true, needMe: false },
+              { id: "t3", title: "跟进消防报批", owner: "PM", due: "2026-03-29", bucket: "week", done: false, impact: true, needMe: true },
+              { id: "t4", title: "现场核对天花高度", owner: "Dilan", due: "2026-03-30", bucket: "week", done: false, impact: false, needMe: false }
+            ],
+            issues: [
+              { id: "i1", title: "客户未确认前台柜体材料", type: "客户确认", desc: "影响木工排产", createdAt: "2026-03-26", owner: "PM", status: "待处理", due: "2026-03-28", impact: true },
+              { id: "i2", title: "UPS规格不明确", type: "图纸", desc: "无法采购", createdAt: "2026-03-25", owner: "Kavi", status: "处理中", due: "2026-03-29", impact: true }
+            ],
+            logs: [
+              { id: "l1", date: "2026-03-27", author: "Dilan", stage: "水电", content: "二楼水电开槽完成约70%，东侧墙面发现空鼓待修复。", followUp: true, photos: [] },
+              { id: "l2", date: "2026-03-26", author: "PM", stage: "现场巡查", content: "客户现场要求增加插座4个，已通知设计更新图纸。", followUp: true, photos: [] }
+            ],
+            materials: [
+              { id: "m1", name: "12mm钢化玻璃", spec: "透明", qty: "48m²", supplier: "Lanka Glass", orderStatus: "待确认", arrivalStatus: "待到货", installStatus: "待安装", owner: "Kavi", eta: "2026-03-31" },
+              { id: "m2", name: "铝合金型材", spec: "A6063", qty: "120m", supplier: "Metal Hub", orderStatus: "已下单", arrivalStatus: "待到货", installStatus: "待安装", owner: "Nuwan", eta: "2026-03-30" },
+              { id: "m3", name: "网线及交换机", spec: "Cat6", qty: "1批", supplier: "IT Link", orderStatus: "待采购", arrivalStatus: "待到货", installStatus: "待安装", owner: "PM", eta: "2026-04-02" }
+            ],
+            files: [
+              { id: "f1", name: "WTC-L14-施工图-v3.pdf", type: "施工图", version: "v3", uploader: "Kavi", uploadedAt: "2026-03-25", latest: true, url: "#" },
+              { id: "f2", name: "WTC-L14-合同.pdf", type: "合同", version: "v1", uploader: "PM", uploadedAt: "2026-03-08", latest: true, url: "#" }
+            ]
+          },
+          {
+            id: "portcity-bpo-l7",
+            name: "Port city BPO L7",
+            client: "BPO Holdings",
+            address: "Port City Colombo",
+            manager: "PM",
+            startDate: "2026-02-20",
+            endDate: "2026-05-05",
+            status: "施工中",
+            phase: "泥工阶段",
+            progress: 58,
+            risk: "低",
+            contractAmount: 3500000,
+            received: 2100000,
+            paid: 1380000,
+            pendingSpend: 460000,
+            changeAmount: 90000,
+            stages: [
+              { id: "p1", name: "现场测量", status: "已完成", start: "2026-02-20", planEnd: "2026-02-22", actualEnd: "2026-02-22", owner: "Ajan", remark: "" },
+              { id: "p2", name: "图纸确认", status: "已完成", start: "2026-02-23", planEnd: "2026-02-28", actualEnd: "2026-02-28", owner: "Kavi", remark: "" },
+              { id: "p3", name: "报价/合同", status: "已完成", start: "2026-03-01", planEnd: "2026-03-03", actualEnd: "2026-03-03", owner: "PM", remark: "" },
+              { id: "p4", name: "拆除", status: "已完成", start: "2026-03-04", planEnd: "2026-03-07", actualEnd: "2026-03-07", owner: "Nuwan", remark: "" },
+              { id: "p5", name: "水电", status: "已完成", start: "2026-03-08", planEnd: "2026-03-20", actualEnd: "2026-03-21", owner: "Dilan", remark: "晚1天" },
+              { id: "p6", name: "泥工", status: "进行中", start: "2026-03-22", planEnd: "2026-04-02", actualEnd: "", owner: "Chami", remark: "" },
+              { id: "p7", name: "木工", status: "未开始", start: "", planEnd: "2026-04-10", actualEnd: "", owner: "Madu", remark: "" }
+            ],
+            tasks: [
+              { id: "pt1", title: "确认玻璃隔断样式", owner: "PM", due: "2026-03-28", bucket: "today", done: false, impact: false, needMe: true },
+              { id: "pt2", title: "泥工班组进度复核", owner: "Chami", due: "2026-03-31", bucket: "week", done: false, impact: true, needMe: false }
+            ],
+            issues: [
+              { id: "pi1", title: "物业夜间施工审批延迟", type: "物业", desc: "夜班计划受限", createdAt: "2026-03-26", owner: "PM", status: "处理中", due: "2026-03-30", impact: false }
+            ],
+            logs: [
+              { id: "pl1", date: "2026-03-27", author: "Chami", stage: "泥工", content: "西侧墙面找平完成，准备第二遍。", followUp: false, photos: [] }
+            ],
+            materials: [
+              { id: "pm1", name: "瓷砖胶", spec: "25kg", qty: "80包", supplier: "Build Plus", orderStatus: "已下单", arrivalStatus: "已到货", installStatus: "待安装", owner: "Nuwan", eta: "2026-03-27" }
+            ],
+            files: [
+              { id: "pf1", name: "L7-机电图-v2.pdf", type: "机电图", version: "v2", uploader: "Kavi", uploadedAt: "2026-03-22", latest: true, url: "#" }
+            ]
+          }
+        ];
+
+        const state = {
+          projects: [],
+          selectedProjectId: "",
+          search: "",
+          statusFilter: "all",
+          adminUnlocked: false,
+          activeTab: "overview",
+          draggingProjectId: "",
+          draggingTaskId: "",
+          draggingStageId: "",
+          negotiationCandidates: [],
+          selectedNegotiationIds: {},
+        };
+
+        const isAdminSessionActive = () => {
+          try {
+            const raw = localStorage.getItem(ADMIN_SESSION_KEY);
+            if (!raw) return false;
+            const parsed = JSON.parse(raw);
+            const expiresAt = Number(parsed?.expiresAt);
+            if (!Number.isFinite(expiresAt) || expiresAt <= Date.now()) {
+              localStorage.removeItem(ADMIN_SESSION_KEY);
+              return false;
+            }
+            return true;
+          } catch (_error) {
+            localStorage.removeItem(ADMIN_SESSION_KEY);
+            return false;
+          }
+        };
+
+        const persistAdminSession = () => {
+          try {
+            localStorage.setItem(
+              ADMIN_SESSION_KEY,
+              JSON.stringify({ expiresAt: Date.now() + ADMIN_SESSION_TTL_MS })
+            );
+          } catch (_error) {
+            // 忽略存储异常，保持当前页可用
+          }
+        };
+
+        const syncAdminToggleState = () => {
+          adminToggle.classList.toggle("active", state.adminUnlocked);
+          adminToggle.setAttribute("aria-pressed", state.adminUnlocked ? "true" : "false");
+          adminOnlyBlocks.forEach((node) => {
+            node.hidden = !state.adminUnlocked;
+          });
+        };
+
+        state.adminUnlocked = false;
+        syncAdminToggleState();
+
+        const toId = () => `id-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+
+        const toNumber = (value, fallback = 0) => {
+          const parsed = Number(String(value ?? "").replace(/,/g, "").trim());
+          return Number.isFinite(parsed) ? parsed : fallback;
+        };
+
+        const sanitizeFileName = (value) => String(value || "").replace(/[^\w.\-() ]+/g, "_");
+
+        const normalizeStoragePath = (value) => {
+          const text = String(value || "").trim();
+          return text || "";
+        };
+
+        const getProjectStoragePaths = (project) => {
+          if (!project) return [];
+          const filePaths = Array.isArray(project.files)
+            ? project.files.map((item) => normalizeStoragePath(item.path)).filter(Boolean)
+            : [];
+          const logPhotoPaths = Array.isArray(project.logs)
+            ? project.logs.flatMap((log) =>
+                Array.isArray(log.photos)
+                  ? log.photos.map((photo) => normalizeStoragePath(photo.path)).filter(Boolean)
+                  : []
+              )
+            : [];
+          return Array.from(new Set([...filePaths, ...logPhotoPaths]));
+        };
+
+        const uploadProgressStorageFile = async (projectId, section, file) => {
+          if (!file) return null;
+          if (!supabaseClient) {
+            return {
+              name: file.name,
+              type: file.type || "",
+              url: URL.createObjectURL(file),
+              path: "",
+              local: true,
+            };
+          }
+
+          const safeProjectId = sanitizeFileName(projectId || "project");
+          const uniqueKey = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+          const filePath = `${safeProjectId}/${section}/${uniqueKey}-${sanitizeFileName(file.name)}`;
+          const { error: uploadError } = await supabaseClient.storage
+            .from(PROGRESS_STORAGE_BUCKET)
+            .upload(filePath, file);
+          if (uploadError) throw uploadError;
+
+          const { data } = supabaseClient.storage.from(PROGRESS_STORAGE_BUCKET).getPublicUrl(filePath);
+          return {
+            name: file.name,
+            type: file.type || "",
+            url: data?.publicUrl || "#",
+            path: filePath,
+          };
+        };
+
+        const removeProgressStoragePaths = async (paths) => {
+          if (!supabaseClient) return;
+          const safePaths = Array.from(new Set((paths || []).map((item) => normalizeStoragePath(item)).filter(Boolean)));
+          if (safePaths.length === 0) return;
+          await supabaseClient.storage.from(PROGRESS_STORAGE_BUCKET).remove(safePaths);
+        };
+
+        const getFinanceSnapshot = (project) => {
+          const contractAmount = Math.max(0, toNumber(project.contractAmount, 0));
+          const changeAmount = Math.max(0, toNumber(project.changeAmount, 0));
+          const received = Math.max(0, toNumber(project.received, 0));
+          const paid = Math.max(0, toNumber(project.paid, 0));
+          const pendingSpend = Math.max(0, toNumber(project.pendingSpend, 0));
+          const financeExtras = Array.isArray(project.financeExtras) ? project.financeExtras : [];
+          const extraSpend = financeExtras.reduce((sum, item) => sum + Math.max(0, toNumber(item?.amount, 0)), 0);
+          const estimatedRevenue = contractAmount + changeAmount;
+          const unreceived = Math.max(0, contractAmount - received);
+          const grossEstimate = estimatedRevenue - paid - pendingSpend - extraSpend;
+          const paymentReminder = unreceived > 0 ? "有未收款节点" : pendingSpend > 0 ? "有待支出节点" : "当前无提醒";
+          return {
+            estimatedRevenue,
+            unreceived,
+            grossEstimate,
+            paymentReminder,
+            extraSpend,
+          };
+        };
+
+        const moveInArray = (list, fromIndex, toIndex) => {
+          if (fromIndex < 0 || toIndex < 0 || fromIndex === toIndex || fromIndex >= list.length || toIndex >= list.length) {
+            return;
+          }
+          const [moved] = list.splice(fromIndex, 1);
+          list.splice(toIndex, 0, moved);
+        };
+
+        const ensureProjectShape = (project) => ({
+          ...project,
+          stages: Array.isArray(project.stages) ? project.stages : [],
+          tasks: Array.isArray(project.tasks) ? project.tasks : [],
+          issues: Array.isArray(project.issues) ? project.issues : [],
+          logs: Array.isArray(project.logs) ? project.logs : [],
+          materials: Array.isArray(project.materials) ? project.materials : [],
+          files: Array.isArray(project.files) ? project.files : [],
+          overviewExtras: Array.isArray(project.overviewExtras) ? project.overviewExtras : [],
+          financeExtras: Array.isArray(project.financeExtras) ? project.financeExtras : [],
+        });
+
+        const buildProjectFromPrompt = (source = null) => {
+          const seed = source || {};
+          const name = window.prompt(promptText("项目名称："), seed.name || "");
+          if (name === null) return null;
+          const safeName = name.trim();
+          if (!safeName) {
+            setTip("项目名称不能为空。", "warn");
+            return null;
+          }
+
+          const client = window.prompt(promptText("客户名称："), seed.client || "") ?? "";
+          const address = window.prompt(promptText("项目地址："), seed.address || "") ?? "";
+          const manager = window.prompt(promptText("项目经理："), seed.manager || "") ?? "";
+          const status = window.prompt(promptText("当前状态（施工中/待开工/验收阶段/已交付）："), seed.status || "待开工") ?? "待开工";
+          const phase = window.prompt(promptText("当前阶段："), seed.phase || "前期准备") ?? "前期准备";
+          const startDate = window.prompt(promptText("开工日期（YYYY-MM-DD）："), seed.startDate || today()) ?? today();
+          const endDate = window.prompt(promptText("预计完工（YYYY-MM-DD）："), seed.endDate || today()) ?? today();
+          const progress = Math.max(0, Math.min(100, toNumber(window.prompt(promptText("总体进度（0-100）："), String(seed.progress ?? 0)) ?? "0", 0)));
+          const risk = window.prompt(promptText("风险等级（低/中/高）："), seed.risk || "低") ?? "低";
+          const contractAmount = toNumber(
+            window.prompt(promptText("合同金额："), String(seed.contractAmount ?? 0)) ?? "0",
+            seed.contractAmount ?? 0
+          );
+          const received = toNumber(window.prompt(promptText("已收款："), String(seed.received ?? 0)) ?? "0", seed.received ?? 0);
+          const paid = toNumber(window.prompt(promptText("已支出："), String(seed.paid ?? 0)) ?? "0", seed.paid ?? 0);
+          const pendingSpend = toNumber(
+            window.prompt(promptText("待支出："), String(seed.pendingSpend ?? 0)) ?? "0",
+            seed.pendingSpend ?? 0
+          );
+          const changeAmount = toNumber(
+            window.prompt(promptText("增项金额："), String(seed.changeAmount ?? 0)) ?? "0",
+            seed.changeAmount ?? 0
+          );
+
+          return {
+            name: safeName,
+            client: client.trim(),
+            address: address.trim(),
+            manager: manager.trim(),
+            status: status.trim() || "待开工",
+            phase: phase.trim() || "前期准备",
+            startDate: startDate.trim(),
+            endDate: endDate.trim(),
+            progress,
+            risk: risk.trim() || "低",
+            contractAmount,
+            received,
+            paid,
+            pendingSpend,
+            changeAmount,
+          };
+        };
+
+        const formatDate = (value) => {
+          if (!value) return "-";
+          return value;
+        };
+
+        const formatMoney = (value) =>
+          Number(value || 0).toLocaleString("en-US", {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+          });
+
+        const today = () => new Date().toISOString().slice(0, 10);
+
+        const diffDays = (targetDate) => {
+          if (!targetDate) return 0;
+          const now = new Date();
+          const t = new Date(targetDate);
+          const todayOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+          const targetOnly = new Date(t.getFullYear(), t.getMonth(), t.getDate());
+          return Math.round((targetOnly.getTime() - todayOnly.getTime()) / 86400000);
+        };
+
+        const tipI18nMap = {
+          "项目名称不能为空。": "Project name cannot be empty.",
+          "阶段已新增。": "Stage added.",
+          "阶段已删除。": "Stage deleted.",
+          "阶段顺序已更新。": "Stage order updated.",
+          "任务顺序已更新。": "Task order updated.",
+          "概览信息已更新。": "Overview updated.",
+          "概览项已更新。": "Overview item updated.",
+          "概览项已删除。": "Overview item deleted.",
+          "概览项已新增。": "Overview item added.",
+          "费用信息已更新。": "Finance updated.",
+          "费用项已更新。": "Finance item updated.",
+          "费用项已删除。": "Finance item deleted.",
+          "费用项已新增。": "Finance item added.",
+          "任务已删除。": "Task deleted.",
+          "任务已更新。": "Task updated.",
+          "问题已删除。": "Issue deleted.",
+          "问题已更新。": "Issue updated.",
+          "现场记录已更新。": "Site log updated.",
+          "现场记录已删除。": "Site log deleted.",
+          "材料项已删除。": "Material item deleted.",
+          "文件记录已更新。": "File record updated.",
+          "已更新最新版标记。": "Latest file flag updated.",
+          "文件记录已删除。": "File record deleted.",
+          "当前为只读模式，请先开启管理员模式后再录入。": "Read-only mode. Enable admin mode to edit.",
+          "洽谈候选项目刷新失败，请稍后重试。": "Failed to refresh negotiation candidates. Please try again.",
+          "已退出管理员模式。": "Admin mode off.",
+          "管理员模式已开启（30天免密有效）。": "Admin mode enabled (30-day remember).",
+          "密码错误，无法进入管理员模式。": "Wrong password. Cannot enter admin mode.",
+          "管理员模式已开启，30天内无需重新输入密码。": "Admin mode enabled. No password needed for 30 days.",
+          "阶段信息已更新。": "Stage info updated.",
+          "任务已新增。": "Task added.",
+          "问题已登记。": "Issue added.",
+          "现场记录已提交。": "Site log submitted.",
+          "材料项已新增。": "Material item added.",
+          "请先选择文件。": "Please select a file first.",
+          "文件记录已新增。": "File record added.",
+          "已加载进展中项目总控中心。非管理员为只读模式。": "Project control center loaded. Non-admin is read-only.",
+        };
+
+        const localizeInline = (text) => {
+          if (typeof text !== "string") return text;
+          if (window.__davI18n && typeof window.__davI18n.t === "function") {
+            const translated = window.__davI18n.t(text);
+            if (translated !== text) return translated;
+          }
+          const lang = window.__davI18n && window.__davI18n.getLang ? window.__davI18n.getLang() : "zh";
+          if (lang === "en" && tipI18nMap[text]) {
+            return tipI18nMap[text];
+          }
+          return text;
+        };
+        const promptText = (text) => localizeInline(text);
+
+        const setTip = (text, type = "") => {
+          pageTip.textContent = localizeInline(text);
+          pageTip.className = "tip";
+          if (type === "warn") pageTip.classList.add("warn");
+          if (type === "ok") pageTip.classList.add("ok");
+        };
+
+        const persistLocalState = () => {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state.projects));
+        };
+
+        const markProgressTableUnsupported = (error) => {
+          supportsProgressTable = false;
+          if (warnedProgressTable) return;
+          warnedProgressTable = true;
+          const message = String(error?.message || "");
+          console.warn("Supabase progress table unavailable:", message);
+          setTip(
+            "Supabase 未检测到 progress_projects（或字段不完整），已切换本地模式。请执行 supabase-editor.sql。 / Missing progress table, fallback to local mode.",
+            "warn"
+          );
+        };
+
+        const fetchProgressRows = async () => {
+          if (!supabaseClient || !supportsProgressTable) return null;
+          const { data, error } = await supabaseClient
+            .from(PROGRESS_TABLE)
+            .select("id, payload, sort_order, updated_at")
+            .order("sort_order", { ascending: true })
+            .order("updated_at", { ascending: true });
+
+          if (!error) return Array.isArray(data) ? data : [];
+
+          const message = String(error.message || "");
+          if (/relation|does not exist|progress_projects|sort_order|payload|column/i.test(message)) {
+            markProgressTableUnsupported(error);
+            return null;
+          }
+          throw error;
+        };
+
+        const pushProjectsToSupabase = async () => {
+          if (!supabaseClient || !supportsProgressTable) return false;
+          const nowIso = new Date().toISOString();
+          const rows = state.projects.map((project, index) => {
+            const id = String(project.id || toId());
+            return {
+              id,
+              payload: { ...project, id },
+              sort_order: index + 1,
+              updated_at: nowIso,
+            };
+          });
+
+          if (rows.length > 0) {
+            const { error: upsertError } = await supabaseClient
+              .from(PROGRESS_TABLE)
+              .upsert(rows, { onConflict: "id" });
+            if (upsertError) {
+              const message = String(upsertError.message || "");
+              if (/relation|does not exist|progress_projects|sort_order|payload|column/i.test(message)) {
+                markProgressTableUnsupported(upsertError);
+                return false;
+              }
+              throw upsertError;
+            }
+          }
+
+          const { data: existingRows, error: existingError } = await supabaseClient
+            .from(PROGRESS_TABLE)
+            .select("id");
+          if (existingError) {
+            const message = String(existingError.message || "");
+            if (/relation|does not exist|progress_projects|column/i.test(message)) {
+              markProgressTableUnsupported(existingError);
+              return false;
+            }
+            throw existingError;
+          }
+
+          const keepIds = new Set(rows.map((row) => String(row.id)));
+          const idsToDelete = (existingRows || [])
+            .map((row) => String(row.id || ""))
+            .filter((id) => id && !keepIds.has(id));
+
+          if (idsToDelete.length > 0) {
+            const { error: deleteError } = await supabaseClient
+              .from(PROGRESS_TABLE)
+              .delete()
+              .in("id", idsToDelete);
+            if (deleteError) {
+              const message = String(deleteError.message || "");
+              if (/relation|does not exist|progress_projects|column/i.test(message)) {
+                markProgressTableUnsupported(deleteError);
+                return false;
+              }
+              throw deleteError;
+            }
+          }
+
+          return true;
+        };
+
+        const syncStateToSupabase = async () => {
+          if (!supabaseClient || !supportsProgressTable) return;
+          if (isSyncingProgress) {
+            hasPendingProgressSync = true;
+            return;
+          }
+
+          isSyncingProgress = true;
+          try {
+            await pushProjectsToSupabase();
+          } catch (error) {
+            console.warn("Supabase progress sync failed:", error);
+            setTip(`Supabase 同步失败：${error.message || "未知错误"} / Sync failed.`, "warn");
+          } finally {
+            isSyncingProgress = false;
+            if (hasPendingProgressSync) {
+              hasPendingProgressSync = false;
+              await syncStateToSupabase();
+            }
+          }
+        };
+
+        const scheduleProgressSync = () => {
+          if (!supabaseClient || !supportsProgressTable) return;
+          if (progressSyncTimer) clearTimeout(progressSyncTimer);
+          progressSyncTimer = setTimeout(() => {
+            syncStateToSupabase().catch((error) => {
+              console.warn("Supabase queued sync failed:", error);
+            });
+          }, 480);
+        };
+
+        const saveState = () => {
+          persistLocalState();
+          scheduleProgressSync();
+        };
+
+        const loadState = async () => {
+          try {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (!raw) {
+              state.projects = JSON.parse(JSON.stringify(defaultProjects));
+            } else {
+              const parsed = JSON.parse(raw);
+              state.projects = Array.isArray(parsed) && parsed.length > 0 ? parsed : JSON.parse(JSON.stringify(defaultProjects));
+            }
+          } catch (_error) {
+            state.projects = JSON.parse(JSON.stringify(defaultProjects));
+          }
+
+          state.projects = state.projects.map((project) => ensureProjectShape(project));
+          state.selectedProjectId = state.projects[0]?.id || "";
+
+          if (!supabaseClient) return;
+
+          try {
+            const remoteRows = await fetchProgressRows();
+            if (remoteRows === null) return;
+
+            if (remoteRows.length === 0) {
+              if (state.projects.length > 0) {
+                await pushProjectsToSupabase();
+              }
+              return;
+            }
+
+            const remoteProjects = remoteRows
+              .map((row) => {
+                const payload = row && typeof row.payload === "object" && row.payload ? row.payload : {};
+                const projectId = String(row?.id || payload.id || toId());
+                return ensureProjectShape({ ...payload, id: projectId });
+              })
+              .filter((project) => project && project.id);
+
+            if (remoteProjects.length > 0) {
+              state.projects = remoteProjects;
+              if (!state.projects.some((item) => item.id === state.selectedProjectId)) {
+                state.selectedProjectId = state.projects[0]?.id || "";
+              }
+              persistLocalState();
+            }
+          } catch (error) {
+            console.warn("Supabase progress load failed:", error);
+            setTip(`Supabase 读取失败：${error.message || "未知错误"} / Read failed.`, "warn");
+          }
+        };
+
+        const parseNegotiationDeadline = (text) => {
+          const value = String(text || "").trim();
+          if (!value || value === "/") return "";
+          const matched = value.match(/^([A-Za-z]{3})\.\s*(\d{1,2})$/);
+          if (!matched) return "";
+          const monthMap = {
+            Jan: 1,
+            Feb: 2,
+            Mar: 3,
+            Apr: 4,
+            May: 5,
+            Jun: 6,
+            Jul: 7,
+            Aug: 8,
+            Sep: 9,
+            Oct: 10,
+            Nov: 11,
+            Dec: 12,
+          };
+          const month = monthMap[matched[1]];
+          const day = Number(matched[2]);
+          if (!month || !Number.isFinite(day)) return "";
+          const year = new Date().getFullYear();
+          const date = new Date(year, month - 1, day);
+          const iso = date.toISOString().slice(0, 10);
+          return iso;
+        };
+
+        const isNegotiationCompleted = (record) => {
+          const boq = String(record.boq_quote || "");
+          const status = String(record.current_status || "");
+          const notCompleted = status.includes("需修改") || status.includes("待报价") || status.includes("待计算");
+          const completedByBoq = boq.includes("完成");
+          const completedByStatus = status.includes("完成") || status.includes("已完成");
+          return (completedByBoq || completedByStatus) && !notCompleted;
+        };
+
+        const toProgressProjectFromNegotiation = (record) => {
+          const deadlineISO = parseNegotiationDeadline(record.deadline) || "";
+          const dueDate = deadlineISO || today();
+          const nextStep = String(record.next_step || "").trim();
+          const risk = nextStep.includes("紧急") || nextStep.includes("加急")
+            ? "高"
+            : nextStep.includes("提醒") || String(record.current_status || "").includes("待客户回复")
+              ? "中"
+              : "低";
+
+          return ensureProjectShape({
+            id: `neg-${record.id}`,
+            sourceNegotiationId: record.id,
+            name: String(record.project || "未命名项目"),
+            client: "待补充",
+            address: "待补充",
+            manager: "待分配",
+            startDate: today(),
+            endDate: dueDate || today(),
+            status: "待开工",
+            phase: "洽谈完成待启动",
+            progress: 0,
+            risk,
+            contractAmount: 0,
+            received: 0,
+            paid: 0,
+            pendingSpend: 0,
+            changeAmount: 0,
+            stages: [
+              {
+                id: toId(),
+                name: "开工准备",
+                status: "未开始",
+                start: "",
+                planEnd: dueDate,
+                actualEnd: "",
+                owner: "",
+                remark: nextStep || "由洽谈阶段选择转入",
+              },
+            ],
+            tasks: nextStep
+              ? [
+                  {
+                    id: toId(),
+                    title: `承接事项：${nextStep}`,
+                    owner: "待分配",
+                    due: dueDate || today(),
+                    bucket: "today",
+                    done: false,
+                    impact: true,
+                    needMe: true,
+                  },
+                ]
+              : [],
+            issues: [],
+            logs: [],
+            materials: [],
+            files: [],
+          });
+        };
+
+        const findExistingProjectByNegotiation = (record) => {
+          const sourceId = String(record.id ?? "");
+          const bySource = state.projects.find((item) => String(item.sourceNegotiationId ?? "") === sourceId);
+          if (bySource) return bySource;
+          const projectName = String(record.project || "").trim();
+          if (!projectName) return null;
+          const byName = state.projects.find((item) => String(item.name || "").trim() === projectName);
+          return byName || null;
+        };
+
+        const readProgressImportQueue = () => {
+          try {
+            const raw = localStorage.getItem(PROGRESS_IMPORT_QUEUE_KEY);
+            if (!raw) return [];
+            const parsed = JSON.parse(raw);
+            if (!Array.isArray(parsed)) return [];
+            return parsed.filter((item) => item && item.id !== undefined && item.id !== null);
+          } catch (_error) {
+            localStorage.removeItem(PROGRESS_IMPORT_QUEUE_KEY);
+            return [];
+          }
+        };
+
+        const importQueuedNegotiationProjects = () => {
+          const queued = readProgressImportQueue();
+          if (queued.length === 0) {
+            return { queuedCount: 0, insertedCount: 0, linkedCount: 0 };
+          }
+
+          let insertedCount = 0;
+          let linkedCount = 0;
+          queued.forEach((item) => {
+            const record = {
+              id: String(item.id ?? ""),
+              project: String(item.project || ""),
+              boq_quote: String(item.boq_quote || ""),
+              current_status: String(item.current_status || ""),
+              deadline: String(item.deadline || ""),
+              next_step: String(item.next_step || ""),
+              drawing_status: String(item.drawing_status || ""),
+            };
+
+            if (!record.id) return;
+            const sameSource = state.projects.find(
+              (project) => String(project.sourceNegotiationId ?? "") === record.id
+            );
+            if (sameSource) return;
+
+            const sameName = state.projects.find(
+              (project) => String(project.name || "").trim() === String(record.project || "").trim()
+            );
+            if (sameName) {
+              if (!sameName.sourceNegotiationId) {
+                sameName.sourceNegotiationId = record.id;
+                linkedCount += 1;
+              }
+              return;
+            }
+
+            state.projects.unshift(toProgressProjectFromNegotiation(record));
+            insertedCount += 1;
+          });
+
+          localStorage.removeItem(PROGRESS_IMPORT_QUEUE_KEY);
+          if (insertedCount > 0 || linkedCount > 0) {
+            if (insertedCount > 0) {
+              state.selectedProjectId = state.projects[0]?.id || state.selectedProjectId;
+            }
+            saveState();
+          }
+
+          return { queuedCount: queued.length, insertedCount, linkedCount };
+        };
+
+        const fetchCompletedNegotiationRecords = async () => {
+          if (!supabaseClient) return [];
+          const columns = "id, project, boq_quote, current_status, deadline, next_step";
+          const pageSize = 1000;
+          let from = 0;
+          const records = [];
+
+          while (true) {
+            const { data, error } = await supabaseClient
+              .from(NEGOTIATION_TABLE)
+              .select(columns)
+              .range(from, from + pageSize - 1);
+
+            if (error) {
+              throw new Error(error.message || "未知错误");
+            }
+
+            const batch = Array.isArray(data) ? data : [];
+            if (batch.length === 0) break;
+            records.push(...batch);
+            if (batch.length < pageSize) break;
+            from += pageSize;
+          }
+
+          return records.filter(isNegotiationCompleted);
+        };
+
+        const renderNegotiationCandidateList = () => {
+          if (!negotiationCandidateList) return;
+          if (!supabaseClient) {
+            negotiationCandidateList.innerHTML = '<div class="muted">未连接洽谈数据源，暂无法加载候选项目。</div>';
+            return;
+          }
+
+          const list = Array.isArray(state.negotiationCandidates) ? state.negotiationCandidates : [];
+          if (list.length === 0) {
+            negotiationCandidateList.innerHTML = '<div class="muted">暂无“洽谈完成”项目可供选择。</div>';
+            return;
+          }
+
+          negotiationCandidateList.innerHTML = "";
+          list.forEach((record) => {
+            const idKey = String(record.id);
+            const existingProject = findExistingProjectByNegotiation(record);
+            const imported = Boolean(existingProject);
+            const checked = Boolean(state.selectedNegotiationIds[idKey]);
+
+            const row = document.createElement("label");
+            row.className = "sync-item";
+            row.innerHTML = `
+              <input type="checkbox" data-negotiation-select="${idKey}" ${checked ? "checked" : ""} ${imported ? "disabled" : ""} />
+              <div class="sync-item-main">
+                <p class="sync-item-title">${String(record.project || "未命名项目")}</p>
+                <p class="sync-item-meta">当前状态：${String(record.current_status || "-")} ｜ BOQ：${String(record.boq_quote || "-")} ｜ 应截止：${String(record.deadline || "-")}</p>
+                <p class="sync-item-meta">下一步：${String(record.next_step || "无")}</p>
+              </div>
+              <span class="sync-status ${imported ? "done" : "pending"}">${imported ? "已在总控中心" : "待添加"}</span>
+            `;
+
+            const checkbox = row.querySelector("[data-negotiation-select]");
+            if (checkbox) {
+              checkbox.addEventListener("change", (event) => {
+                if (event.target.checked) {
+                  state.selectedNegotiationIds[idKey] = true;
+                } else {
+                  delete state.selectedNegotiationIds[idKey];
+                }
+              });
+            }
+
+            negotiationCandidateList.appendChild(row);
+          });
+        };
+
+        const refreshNegotiationCandidates = async (showTip = false) => {
+          if (!supabaseClient) {
+            state.negotiationCandidates = [];
+            state.selectedNegotiationIds = {};
+            renderNegotiationCandidateList();
+            if (showTip) setTip("未连接洽谈数据源，无法加载候选项目。", "warn");
+            return;
+          }
+
+          const completed = await fetchCompletedNegotiationRecords();
+          completed.sort((a, b) => String(a.project || "").localeCompare(String(b.project || ""), "zh-CN"));
+          state.negotiationCandidates = completed;
+
+          const availableIds = new Set(
+            completed
+              .filter((record) => !findExistingProjectByNegotiation(record))
+              .map((record) => String(record.id))
+          );
+          Object.keys(state.selectedNegotiationIds).forEach((idKey) => {
+            if (!availableIds.has(idKey)) delete state.selectedNegotiationIds[idKey];
+          });
+
+          renderNegotiationCandidateList();
+
+          if (showTip) {
+            const pendingCount = completed.filter((record) => !findExistingProjectByNegotiation(record)).length;
+            setTip(`已刷新洽谈完成项目：共 ${completed.length} 个，待添加 ${pendingCount} 个。`, "ok");
+          }
+        };
+
+        const toggleSelectAllNegotiationCandidates = () => {
+          const pending = state.negotiationCandidates.filter((record) => !findExistingProjectByNegotiation(record));
+          if (pending.length === 0) {
+            setTip("当前没有可添加的洽谈完成项目。", "warn");
+            return;
+          }
+
+          const allSelected = pending.every((record) => state.selectedNegotiationIds[String(record.id)]);
+          pending.forEach((record) => {
+            const idKey = String(record.id);
+            if (allSelected) {
+              delete state.selectedNegotiationIds[idKey];
+            } else {
+              state.selectedNegotiationIds[idKey] = true;
+            }
+          });
+          renderNegotiationCandidateList();
+          setTip(allSelected ? "已取消全选待添加项目。" : `已全选 ${pending.length} 个待添加项目。`, "ok");
+        };
+
+        const addSelectedNegotiationProjects = () => {
+          if (!ensureAdmin()) return;
+          const selected = state.negotiationCandidates.filter((record) => state.selectedNegotiationIds[String(record.id)]);
+          if (selected.length === 0) {
+            setTip("请先勾选要添加到总控中心的洽谈项目。", "warn");
+            return;
+          }
+
+          let insertedCount = 0;
+          let linkedCount = 0;
+          selected.forEach((record) => {
+            const sameSource = state.projects.find(
+              (item) => String(item.sourceNegotiationId ?? "") === String(record.id ?? "")
+            );
+            if (sameSource) return;
+            const sameName = state.projects.find(
+              (item) => String(item.name || "").trim() === String(record.project || "").trim()
+            );
+            if (sameName) {
+              if (!sameName.sourceNegotiationId) {
+                sameName.sourceNegotiationId = record.id;
+                linkedCount += 1;
+              }
+              return;
+            }
+            state.projects.unshift(toProgressProjectFromNegotiation(record));
+            insertedCount += 1;
+          });
+
+          state.selectedNegotiationIds = {};
+          if (insertedCount > 0 || linkedCount > 0) {
+            saveState();
+            if (!state.selectedProjectId) {
+              state.selectedProjectId = state.projects[0]?.id || "";
+            }
+            renderAll();
+            const parts = [];
+            if (insertedCount > 0) parts.push(`新增 ${insertedCount} 个`);
+            if (linkedCount > 0) parts.push(`关联 ${linkedCount} 个同名项目`);
+            setTip(`已将选中洽谈项目添加到总控中心（${parts.join("，")}）。`, "ok");
+            return;
+          }
+
+          renderNegotiationCandidateList();
+          setTip("选中项目均已在总控中心，无需重复添加。", "warn");
+        };
+
+        const getSelectedProject = () => state.projects.find((item) => item.id === state.selectedProjectId);
+
+        const clearProjectDropStates = () => {
+          projectList.querySelectorAll(".project-item").forEach((node) => {
+            node.classList.remove("drop-target", "dragging");
+          });
+          state.draggingProjectId = "";
+        };
+
+        const reorderProjects = (sourceId, targetId) => {
+          const fromIndex = state.projects.findIndex((item) => item.id === sourceId);
+          const toIndex = state.projects.findIndex((item) => item.id === targetId);
+          if (fromIndex < 0 || toIndex < 0 || fromIndex === toIndex) return;
+          moveInArray(state.projects, fromIndex, toIndex);
+          saveState();
+          renderAll();
+          setTip("项目顺序已更新。", "ok");
+        };
+
+        const createProject = () => {
+          if (!ensureAdmin()) return;
+          const payload = buildProjectFromPrompt();
+          if (!payload) return;
+
+          const stageId = toId();
+          const project = ensureProjectShape({
+            id: toId(),
+            ...payload,
+            stages: [
+              {
+                id: stageId,
+                name: payload.phase || "前期准备",
+                status: "未开始",
+                start: payload.startDate || "",
+                planEnd: payload.endDate || "",
+                actualEnd: "",
+                owner: payload.manager || "",
+                remark: "",
+              },
+            ],
+            tasks: [],
+            issues: [],
+            logs: [],
+            materials: [],
+            files: [],
+          });
+
+          state.projects.unshift(project);
+          state.selectedProjectId = project.id;
+          saveState();
+          setTip("项目已新增。", "ok");
+          renderAll();
+        };
+
+        const editSelectedProject = () => {
+          if (!ensureAdmin()) return;
+          const project = getSelectedProject();
+          if (!project) {
+            setTip("暂无可编辑项目。", "warn");
+            return;
+          }
+
+          const payload = buildProjectFromPrompt(project);
+          if (!payload) return;
+          Object.assign(project, payload);
+          saveState();
+          setTip("项目信息已更新。", "ok");
+          renderAll(false);
+        };
+
+        const deleteSelectedProject = async () => {
+          if (!ensureAdmin()) return;
+          const project = getSelectedProject();
+          if (!project) {
+            setTip("暂无可删除项目。", "warn");
+            return;
+          }
+
+          const confirmed = window.confirm(
+            localizeInline(`确认删除项目「${project.name}」吗？该操作不可恢复。 / Confirm delete project "${project.name}"? This cannot be undone.`)
+          );
+          if (!confirmed) return;
+
+          let cleanupFailed = false;
+          try {
+            await removeProgressStoragePaths(getProjectStoragePaths(project));
+          } catch (error) {
+            cleanupFailed = true;
+            console.warn("Project storage cleanup failed:", error);
+          }
+
+          state.projects = state.projects.filter((item) => item.id !== project.id);
+          state.selectedProjectId = state.projects[0]?.id || "";
+          saveState();
+          setTip(
+            cleanupFailed
+              ? "项目已删除，但部分附件清理失败。 / Project deleted, but some file cleanup failed."
+              : "项目已删除。",
+            cleanupFailed ? "warn" : "ok"
+          );
+          renderAll();
+        };
+
+        const addStageToProject = () => {
+          if (!ensureAdmin()) return;
+          const project = getSelectedProject();
+          if (!project) {
+            setTip("请先选择项目。", "warn");
+            return;
+          }
+
+          const stageName = window.prompt(promptText("新增阶段名称："), "新阶段");
+          if (stageName === null) return;
+          const safeName = stageName.trim();
+          if (!safeName) {
+            setTip("阶段名称不能为空。", "warn");
+            return;
+          }
+
+          project.stages.push({
+            id: toId(),
+            name: safeName,
+            status: "未开始",
+            start: "",
+            planEnd: project.endDate || "",
+            actualEnd: "",
+            owner: project.manager || "",
+            remark: "",
+          });
+          saveState();
+          setActiveTab("overview");
+          setTip("阶段已新增。", "ok");
+          renderAll(false);
+        };
+
+        const deleteStageFromProject = (project, stageId) => {
+          if (!project || !stageId) return;
+          project.stages = project.stages.filter((stage) => stage.id !== stageId);
+          saveState();
+          setTip("阶段已删除。", "ok");
+          renderAll(false);
+        };
+
+        const reorderStages = (project, sourceStageId, targetStageId) => {
+          if (!project) return;
+          const fromIndex = project.stages.findIndex((stage) => stage.id === sourceStageId);
+          const toIndex = project.stages.findIndex((stage) => stage.id === targetStageId);
+          if (fromIndex < 0 || toIndex < 0 || fromIndex === toIndex) return;
+          moveInArray(project.stages, fromIndex, toIndex);
+          saveState();
+          renderAll(false);
+          setTip("阶段顺序已更新。", "ok");
+        };
+
+        const clearTaskDropStates = () => {
+          document.querySelectorAll(".task-card").forEach((node) => {
+            node.classList.remove("dragging", "drop-target");
+          });
+          todayTaskList.classList.remove("drag-target");
+          weekTaskList.classList.remove("drag-target");
+          state.draggingTaskId = "";
+        };
+
+        const moveTask = (project, sourceId, targetId = "", targetBucket = "") => {
+          if (!project || !sourceId) return;
+          const sourceIndex = project.tasks.findIndex((item) => item.id === sourceId);
+          if (sourceIndex < 0) return;
+
+          const [moving] = project.tasks.splice(sourceIndex, 1);
+          if (targetBucket) moving.bucket = targetBucket;
+
+          if (!targetId) {
+            project.tasks.push(moving);
+          } else {
+            const targetIndex = project.tasks.findIndex((item) => item.id === targetId);
+            if (targetIndex < 0) {
+              project.tasks.push(moving);
+            } else {
+              project.tasks.splice(targetIndex, 0, moving);
+            }
+          }
+
+          saveState();
+          renderAll(false);
+          setTip("任务顺序已更新。", "ok");
+        };
+
+        const getRiskLevel = (project) => {
+          const overdueTasks = project.tasks.filter((t) => !t.done && diffDays(t.due) < 0).length;
+          const overdueIssues = project.issues.filter((i) => i.status !== "已解决" && i.status !== "已关闭" && diffDays(i.due) < 0).length;
+          const delayedStages = project.stages.filter((s) => s.status === "延误").length;
+          const score = overdueTasks * 2 + overdueIssues * 2 + delayedStages * 3;
+          if (score >= 6) return "高";
+          if (score >= 3) return "中";
+          return project.risk || "低";
+        };
+
+        const getNextNode = (project) => {
+          const pending = project.stages.find((stage) => stage.status !== "已完成");
+          if (!pending) return "全部阶段已完成";
+          return `${pending.name}（计划 ${formatDate(pending.planEnd)}）`;
+        };
+
+        const getAlerts = (project) => {
+          const alerts = [];
+          project.tasks.forEach((task) => {
+            if (!task.done && diffDays(task.due) < 0) {
+              alerts.push(`任务延期：${task.title}（负责人 ${task.owner}）`);
+            }
+          });
+          project.issues.forEach((issue) => {
+            if (issue.status !== "已解决" && issue.status !== "已关闭" && diffDays(issue.due) <= 1) {
+              alerts.push(`问题临期：${issue.title}（截止 ${issue.due}）`);
+            }
+          });
+          project.materials.forEach((item) => {
+            if (item.arrivalStatus !== "已到货" && diffDays(item.eta) < 0) {
+              alerts.push(`材料延误：${item.name}（预计 ${item.eta}）`);
+            }
+          });
+          return alerts;
+        };
+
+        const getFilteredProjects = () => {
+          const key = state.search.trim().toLowerCase();
+          return state.projects.filter((project) => {
+            const matchStatus = state.statusFilter === "all" || project.status === state.statusFilter;
+            const text = `${project.name} ${project.client} ${project.address} ${project.manager}`.toLowerCase();
+            const matchSearch = !key || text.includes(key);
+            return matchStatus && matchSearch;
+          });
+        };
+
+        const statusClass = (status) => {
+          if (status === "已完成") return "chip-done";
+          if (status === "进行中") return "chip-progress";
+          if (status === "延误") return "chip-delay";
+          return "chip-pending";
+        };
+
+        const renderProjectList = () => {
+          const list = getFilteredProjects();
+          projectList.innerHTML = "";
+
+          if (list.length === 0) {
+            projectList.innerHTML = '<div class="muted">暂无匹配项目。</div>';
+            return;
+          }
+
+          if (!list.some((item) => item.id === state.selectedProjectId)) {
+            state.selectedProjectId = list[0].id;
+          }
+
+          list.forEach((project) => {
+            const item = document.createElement("article");
+            item.className = `project-item ${project.id === state.selectedProjectId ? "active" : ""}`;
+            item.innerHTML = `
+              <div class="project-top">
+                <span class="project-name-text">${project.name}</span>
+                <span class="badge ${project.status === "已交付" ? "status-done" : project.status === "施工中" ? "status-live" : "status-delay"}">${project.status}</span>
+              </div>
+            `;
+
+            item.addEventListener("click", () => {
+              state.selectedProjectId = project.id;
+              renderAll();
+            });
+
+            if (state.adminUnlocked) {
+              item.draggable = true;
+              item.addEventListener("dragstart", () => {
+                state.draggingProjectId = project.id;
+                item.classList.add("dragging");
+              });
+
+              item.addEventListener("dragover", (event) => {
+                if (!state.draggingProjectId || state.draggingProjectId === project.id) return;
+                event.preventDefault();
+                item.classList.add("drop-target");
+              });
+
+              item.addEventListener("dragleave", () => {
+                item.classList.remove("drop-target");
+              });
+
+              item.addEventListener("drop", (event) => {
+                event.preventDefault();
+                const sourceId = state.draggingProjectId;
+                clearProjectDropStates();
+                if (!sourceId || sourceId === project.id) return;
+                reorderProjects(sourceId, project.id);
+              });
+
+              item.addEventListener("dragend", () => {
+                clearProjectDropStates();
+              });
+            }
+
+            projectList.appendChild(item);
+          });
+        };
+
+        const renderKpis = (project) => {
+          const daysLeft = diffDays(project.endDate);
+          const risk = getRiskLevel(project);
+          const nextNode = getNextNode(project);
+          const delay = daysLeft < 0 && project.progress < 100 ? Math.abs(daysLeft) : 0;
+          const financeSnapshot = getFinanceSnapshot(project);
+
+          kpiGrid.innerHTML = `
+            <div class="kpi-card">
+              <p class="kpi-title">总体进度</p>
+              <p class="kpi-value">${project.progress}%</p>
+              <div class="progress-track"><div class="progress-fill" style="width:${Math.min(100, Math.max(0, project.progress))}%"></div></div>
+            </div>
+            <div class="kpi-card">
+              <p class="kpi-title">当前状态</p>
+              <p class="kpi-value">${project.status}</p>
+              <p class="kpi-meta">阶段：${project.phase}</p>
+            </div>
+            <div class="kpi-card">
+              <p class="kpi-title">距离交付</p>
+              <p class="kpi-value">${daysLeft}天</p>
+              <p class="kpi-meta">预计完工：${project.endDate}</p>
+            </div>
+            <div class="kpi-card">
+              <p class="kpi-title">是否延期</p>
+              <p class="kpi-value">${delay > 0 ? `已延期 ${delay}天` : "未延期"}</p>
+              <p class="kpi-meta">开工：${project.startDate}</p>
+            </div>
+            <div class="kpi-card">
+              <p class="kpi-title">风险等级</p>
+              <p class="kpi-value">${risk}</p>
+              <p class="kpi-meta">待处理问题：${project.issues.filter((i) => i.status !== "已解决" && i.status !== "已关闭").length}</p>
+            </div>
+            <div class="kpi-card">
+              <p class="kpi-title">下个关键节点</p>
+              <p class="kpi-value" style="font-size:18px">${nextNode}</p>
+              <p class="kpi-meta">材料到位 + 客户确认优先</p>
+            </div>
+          `;
+
+          answerGrid.innerHTML = `
+            <div class="answer-item"><h4>现在做到哪了</h4><p>${project.phase}，总体 ${project.progress}%</p></div>
+            <div class="answer-item"><h4>今天最该推进什么</h4><p>${project.tasks.find((t) => !t.done && t.bucket === "today")?.title || "暂无今日关键任务"}</p></div>
+            <div class="answer-item"><h4>当前卡点</h4><p>${project.issues.find((i) => i.status !== "已解决" && i.status !== "已关闭")?.title || "暂无明显卡点"}</p></div>
+            <div class="answer-item"><h4>谁负责</h4><p>项目经理 ${project.manager}</p></div>
+            <div class="answer-item"><h4>会不会延期</h4><p>${delay > 0 ? `存在延期风险（${delay}天）` : "当前计划可控"}</p></div>
+            <div class="answer-item"><h4>钱和材料状态</h4><p>未收款 ${formatMoney(financeSnapshot.unreceived)}，待到货 ${project.materials.filter((m) => m.arrivalStatus !== "已到货").length} 项</p></div>
+          `;
+
+          const alerts = getAlerts(project);
+          alertList.innerHTML = alerts.length
+            ? alerts.map((item) => `<div class="alert-item">${item}</div>`).join("")
+            : '<div class="muted">暂无临期预警。</div>';
+        };
+
+        const renderOverview = (project) => {
+          const statusOptions = ["施工中", "待开工", "验收阶段", "已交付"];
+          const riskOptions = ["低", "中", "高"];
+          const overviewExtras = Array.isArray(project.overviewExtras) ? project.overviewExtras : [];
+          const financeExtras = Array.isArray(project.financeExtras) ? project.financeExtras : [];
+          const financeSnapshot = getFinanceSnapshot(project);
+          const { unreceived, grossEstimate, paymentReminder } = financeSnapshot;
+          const renderOptions = (options, value) =>
+            options.map((opt) => `<option ${opt === value ? "selected" : ""}>${opt}</option>`).join("");
+
+          if (state.adminUnlocked) {
+            baseInfo.innerHTML = `
+              <div class="info-item"><p class="info-key">项目名称</p><input class="input" data-project-field="name" value="${project.name || ""}" /></div>
+              <div class="info-item"><p class="info-key">客户名称</p><input class="input" data-project-field="client" value="${project.client || ""}" /></div>
+              <div class="info-item"><p class="info-key">项目地址</p><input class="input" data-project-field="address" value="${project.address || ""}" /></div>
+              <div class="info-item"><p class="info-key">项目经理</p><input class="input" data-project-field="manager" value="${project.manager || ""}" /></div>
+              <div class="info-item"><p class="info-key">开工日期</p><input class="input" type="date" data-project-field="startDate" value="${project.startDate || ""}" /></div>
+              <div class="info-item"><p class="info-key">预计完工</p><input class="input" type="date" data-project-field="endDate" value="${project.endDate || ""}" /></div>
+              <div class="info-item"><p class="info-key">当前状态</p><select class="select" data-project-field="status">${renderOptions(statusOptions, project.status || "待开工")}</select></div>
+              <div class="info-item"><p class="info-key">当前施工阶段</p><input class="input" data-project-field="phase" value="${project.phase || ""}" /></div>
+              <div class="info-item"><p class="info-key">总体进度(%)</p><input class="input" type="number" min="0" max="100" step="1" data-project-field="progress" value="${Number(project.progress) || 0}" /></div>
+              <div class="info-item"><p class="info-key">风险等级</p><select class="select" data-project-field="risk">${renderOptions(riskOptions, project.risk || "低")}</select></div>
+              ${overviewExtras
+                .map(
+                  (item) => `
+                    <div class="info-item">
+                      <p class="info-key">自定义概览项</p>
+                      <input class="input" data-overview-extra-field="key" data-overview-extra-id="${item.id}" value="${item.key || ""}" placeholder="名称" />
+                      <input class="input" data-overview-extra-field="value" data-overview-extra-id="${item.id}" value="${item.value || ""}" placeholder="内容" style="margin-top:6px" />
+                      <button class="danger-btn mini-btn" type="button" data-delete-overview-extra="${item.id}" style="margin-top:8px">删除</button>
+                    </div>
+                  `
+                )
+                .join("")}
+              <div class="info-item">
+                <p class="info-key">新增概览项</p>
+                <button class="mini-btn" type="button" data-add-overview-extra>新增</button>
+              </div>
+            `;
+
+            baseInfo.querySelectorAll("[data-project-field]").forEach((input) => {
+              input.addEventListener("change", (event) => {
+                const field = event.target.getAttribute("data-project-field");
+                if (!field) return;
+                const previous = project[field];
+                let nextValue = event.target.value;
+                if (field === "progress") {
+                  nextValue = Math.max(0, Math.min(100, toNumber(nextValue, Number(project.progress) || 0)));
+                } else {
+                  nextValue = String(nextValue || "").trim();
+                }
+                if (field === "name" && !nextValue) {
+                  event.target.value = previous || "";
+                  setTip("项目名称不能为空。", "warn");
+                  return;
+                }
+                project[field] = nextValue;
+                saveState();
+                renderAll(false);
+                setTip("概览信息已更新。", "ok");
+              });
+            });
+
+            baseInfo.querySelectorAll("[data-overview-extra-field]").forEach((input) => {
+              input.addEventListener("change", (event) => {
+                const id = event.target.getAttribute("data-overview-extra-id");
+                const field = event.target.getAttribute("data-overview-extra-field");
+                const target = project.overviewExtras.find((item) => item.id === id);
+                if (!target || !field) return;
+                target[field] = String(event.target.value || "").trim();
+                saveState();
+                renderAll(false);
+                setTip("概览项已更新。", "ok");
+              });
+            });
+
+            baseInfo.querySelectorAll("[data-delete-overview-extra]").forEach((btn) => {
+              btn.addEventListener("click", () => {
+                const id = btn.getAttribute("data-delete-overview-extra");
+                project.overviewExtras = project.overviewExtras.filter((item) => item.id !== id);
+                saveState();
+                renderAll(false);
+                setTip("概览项已删除。", "ok");
+              });
+            });
+
+            const addOverviewBtn = baseInfo.querySelector("[data-add-overview-extra]");
+            if (addOverviewBtn) {
+              addOverviewBtn.addEventListener("click", () => {
+                project.overviewExtras.push({
+                  id: toId(),
+                  key: "补充信息",
+                  value: "",
+                });
+                saveState();
+                renderAll(false);
+                setTip("概览项已新增。", "ok");
+              });
+            }
+          } else {
+            const base = [
+              ["项目名称", project.name],
+              ["客户名称", project.client],
+              ["项目地址", project.address],
+              ["项目经理", project.manager],
+              ["开工日期", formatDate(project.startDate)],
+              ["预计完工", formatDate(project.endDate)],
+              ["当前状态", project.status],
+              ["当前施工阶段", project.phase],
+              ["总体进度", `${project.progress}%`],
+              ["风险等级", getRiskLevel(project)],
+            ];
+            const ext = overviewExtras.map((item) => [item.key || "补充信息", item.value || "-"]);
+            baseInfo.innerHTML = [...base, ...ext]
+              .map(([key, value]) => `<div class="info-item"><p class="info-key">${key}</p><p class="info-value">${value}</p></div>`)
+              .join("");
+          }
+
+          if (state.adminUnlocked) {
+            financeBoard.innerHTML = `
+              <div class="info-item"><p class="info-key">合同金额</p><input class="input" type="number" min="0" step="1" data-finance-field="contractAmount" value="${Number(project.contractAmount) || 0}" /></div>
+              <div class="info-item"><p class="info-key">已收款</p><input class="input" type="number" min="0" step="1" data-finance-field="received" value="${Number(project.received) || 0}" /></div>
+              <div class="info-item"><p class="info-key">已支出</p><input class="input" type="number" min="0" step="1" data-finance-field="paid" value="${Number(project.paid) || 0}" /></div>
+              <div class="info-item"><p class="info-key">待支出</p><input class="input" type="number" min="0" step="1" data-finance-field="pendingSpend" value="${Number(project.pendingSpend) || 0}" /></div>
+              <div class="info-item"><p class="info-key">增项金额</p><input class="input" type="number" min="0" step="1" data-finance-field="changeAmount" value="${Number(project.changeAmount) || 0}" /></div>
+              <div class="info-item"><p class="info-key">未收款（自动）</p><p class="info-value">${formatMoney(unreceived)}</p></div>
+              <div class="info-item"><p class="info-key">毛利预估（自动）</p><p class="info-value">${formatMoney(grossEstimate)}</p></div>
+              <div class="info-item"><p class="info-key">付款提醒</p><p class="info-value">${paymentReminder}</p></div>
+              ${financeExtras
+                .map(
+                  (item) => `
+                    <div class="info-item">
+                      <p class="info-key">自定义费用项</p>
+                      <input class="input" data-finance-extra-field="name" data-finance-extra-id="${item.id}" value="${item.name || ""}" placeholder="名称" />
+                      <input class="input" type="number" min="0" step="1" data-finance-extra-field="amount" data-finance-extra-id="${item.id}" value="${Number(item.amount) || 0}" placeholder="金额" style="margin-top:6px" />
+                      <button class="danger-btn mini-btn" type="button" data-delete-finance-extra="${item.id}" style="margin-top:8px">删除</button>
+                    </div>
+                  `
+                )
+                .join("")}
+              <div class="info-item">
+                <p class="info-key">新增费用项</p>
+                <button class="mini-btn" type="button" data-add-finance-extra>新增</button>
+              </div>
+            `;
+
+            financeBoard.querySelectorAll("[data-finance-field]").forEach((input) => {
+              input.addEventListener("change", (event) => {
+                const field = event.target.getAttribute("data-finance-field");
+                if (!field) return;
+                project[field] = Math.max(0, toNumber(event.target.value, Number(project[field]) || 0));
+                saveState();
+                renderAll(false);
+                setTip("费用信息已更新。", "ok");
+              });
+            });
+
+            financeBoard.querySelectorAll("[data-finance-extra-field]").forEach((input) => {
+              input.addEventListener("change", (event) => {
+                const id = event.target.getAttribute("data-finance-extra-id");
+                const field = event.target.getAttribute("data-finance-extra-field");
+                const target = project.financeExtras.find((item) => item.id === id);
+                if (!target || !field) return;
+                if (field === "amount") {
+                  target.amount = Math.max(0, toNumber(event.target.value, Number(target.amount) || 0));
+                } else {
+                  target.name = String(event.target.value || "").trim();
+                }
+                saveState();
+                renderAll(false);
+                setTip("费用项已更新。", "ok");
+              });
+            });
+
+            financeBoard.querySelectorAll("[data-delete-finance-extra]").forEach((btn) => {
+              btn.addEventListener("click", () => {
+                const id = btn.getAttribute("data-delete-finance-extra");
+                project.financeExtras = project.financeExtras.filter((item) => item.id !== id);
+                saveState();
+                renderAll(false);
+                setTip("费用项已删除。", "ok");
+              });
+            });
+
+            const addFinanceBtn = financeBoard.querySelector("[data-add-finance-extra]");
+            if (addFinanceBtn) {
+              addFinanceBtn.addEventListener("click", () => {
+                project.financeExtras.push({
+                  id: toId(),
+                  name: "其他费用",
+                  amount: 0,
+                });
+                saveState();
+                renderAll(false);
+                setTip("费用项已新增。", "ok");
+              });
+            }
+          } else {
+            financeBoard.innerHTML = [
+              ["合同金额", formatMoney(project.contractAmount)],
+              ["已收款", formatMoney(project.received)],
+              ["未收款", formatMoney(unreceived)],
+              ["已支出", formatMoney(project.paid)],
+              ["待支出", formatMoney(project.pendingSpend)],
+              ["增项金额", formatMoney(project.changeAmount)],
+              ["毛利预估", formatMoney(grossEstimate)],
+              ["付款提醒", paymentReminder],
+              ...financeExtras.map((item) => [item.name || "其他费用", formatMoney(item.amount)]),
+            ]
+              .map(([key, value]) => `<div class="info-item"><p class="info-key">${key}</p><p class="info-value">${value}</p></div>`)
+              .join("");
+          }
+
+          stageTrack.innerHTML = project.stages
+            .map((stage) => `<span class="stage-chip ${statusClass(stage.status)}">${stage.name} · ${stage.status}</span>`)
+            .join("");
+          if (stageActionHeader) stageActionHeader.hidden = !state.adminUnlocked;
+
+          stageTableBody.innerHTML = "";
+          project.stages.forEach((stage) => {
+            const row = document.createElement("tr");
+
+            const statusCell = state.adminUnlocked
+              ? `<select class="select" data-stage-field="status" data-stage-id="${stage.id}">
+                  <option ${stage.status === "未开始" ? "selected" : ""}>未开始</option>
+                  <option ${stage.status === "进行中" ? "selected" : ""}>进行中</option>
+                  <option ${stage.status === "已完成" ? "selected" : ""}>已完成</option>
+                  <option ${stage.status === "延误" ? "selected" : ""}>延误</option>
+                </select>`
+              : `<span class="badge ${statusClass(stage.status)}">${stage.status}</span>`;
+
+            const stageNameCell = state.adminUnlocked
+              ? `<input class="input" data-stage-field="name" data-stage-id="${stage.id}" value="${stage.name || ""}" />`
+              : stage.name;
+
+            const ownerCell = state.adminUnlocked
+              ? `<input class="input" data-stage-field="owner" data-stage-id="${stage.id}" value="${stage.owner || ""}" />`
+              : stage.owner || "-";
+
+            const remarkCell = state.adminUnlocked
+              ? `<input class="input" data-stage-field="remark" data-stage-id="${stage.id}" value="${stage.remark || ""}" />`
+              : stage.remark || "-";
+
+            const startCell = state.adminUnlocked
+              ? `<input class="input" type="date" data-stage-field="start" data-stage-id="${stage.id}" value="${stage.start || ""}" />`
+              : formatDate(stage.start);
+
+            const planCell = state.adminUnlocked
+              ? `<input class="input" type="date" data-stage-field="planEnd" data-stage-id="${stage.id}" value="${stage.planEnd || ""}" />`
+              : formatDate(stage.planEnd);
+
+            const actualCell = state.adminUnlocked
+              ? `<input class="input" type="date" data-stage-field="actualEnd" data-stage-id="${stage.id}" value="${stage.actualEnd || ""}" />`
+              : formatDate(stage.actualEnd);
+
+            const actionCell = state.adminUnlocked
+              ? `<button class="danger-btn mini-btn" data-delete-stage="${stage.id}" type="button">删除</button>`
+              : "";
+
+            row.innerHTML = `
+              <td data-label="阶段">${stageNameCell}</td>
+              <td data-label="状态">${statusCell}</td>
+              <td data-label="开始">${startCell}</td>
+              <td data-label="计划完成">${planCell}</td>
+              <td data-label="实际完成">${actualCell}</td>
+              <td data-label="负责人">${ownerCell}</td>
+              <td data-label="备注">${remarkCell}</td>
+              ${state.adminUnlocked ? `<td data-label="操作">${actionCell}</td>` : ""}
+            `;
+
+            if (state.adminUnlocked) {
+              row.classList.add("stage-row", "draggable");
+              row.draggable = true;
+              row.addEventListener("dragstart", () => {
+                state.draggingStageId = stage.id;
+                row.classList.add("dragging");
+              });
+              row.addEventListener("dragover", (event) => {
+                if (!state.draggingStageId || state.draggingStageId === stage.id) return;
+                event.preventDefault();
+                row.classList.add("drop-target");
+              });
+              row.addEventListener("dragleave", () => {
+                row.classList.remove("drop-target");
+              });
+              row.addEventListener("drop", (event) => {
+                event.preventDefault();
+                const sourceId = state.draggingStageId;
+                state.draggingStageId = "";
+                stageTableBody.querySelectorAll(".stage-row").forEach((node) => {
+                  node.classList.remove("drop-target", "dragging");
+                });
+                if (!sourceId || sourceId === stage.id) return;
+                reorderStages(project, sourceId, stage.id);
+              });
+              row.addEventListener("dragend", () => {
+                state.draggingStageId = "";
+                stageTableBody.querySelectorAll(".stage-row").forEach((node) => {
+                  node.classList.remove("drop-target", "dragging");
+                });
+              });
+            }
+
+            const deleteStageBtn = row.querySelector("[data-delete-stage]");
+            if (deleteStageBtn) {
+              deleteStageBtn.addEventListener("click", () => {
+                const confirmed = window.confirm(localizeInline(`确认删除阶段「${stage.name}」吗？ / Confirm delete stage "${stage.name}"?`));
+                if (!confirmed) return;
+                deleteStageFromProject(project, stage.id);
+              });
+            }
+
+            stageTableBody.appendChild(row);
+          });
+        };
+
+        const makeTaskCard = (task, project) => {
+          const card = document.createElement("article");
+          card.className = "task-card";
+          card.dataset.taskId = task.id;
+          const dueDelta = diffDays(task.due);
+          const dueTag = dueDelta < 0 ? '<span class="tag delay">已逾期</span>' : `<span class="tag">D${dueDelta}</span>`;
+          const taskActions = state.adminUnlocked
+            ? `<div class="form-actions" style="margin-top:8px">
+                <label class="muted"><input type="checkbox" data-action="toggle-task" data-id="${task.id}" ${task.done ? "checked" : ""}/> 完成</label>
+                <button class="mini-btn" data-action="edit-task" data-id="${task.id}" type="button">编辑</button>
+                <button class="danger-btn mini-btn" data-action="delete-task" data-id="${task.id}" type="button">删除</button>
+              </div>`
+            : "";
+          card.innerHTML = `
+            <div class="task-head">
+              <h4 class="task-title">${task.title}</h4>
+              ${task.done ? '<span class="tag done">已完成</span>' : dueTag}
+            </div>
+            <p class="muted">负责人：${task.owner} ｜ 截止：${task.due}</p>
+            <div class="tags">
+              ${task.impact ? '<span class="tag urgent">影响工期</span>' : ""}
+              ${task.needMe ? '<span class="tag">需要你介入</span>' : ""}
+            </div>
+            ${taskActions}
+          `;
+
+          const toggleTaskInput = card.querySelector('[data-action="toggle-task"]');
+          if (toggleTaskInput) {
+            toggleTaskInput.addEventListener("change", (event) => {
+              task.done = event.target.checked;
+              saveState();
+              renderAll(false);
+            });
+          }
+
+          const delBtn = card.querySelector('[data-action="delete-task"]');
+          if (delBtn) {
+            delBtn.addEventListener("click", () => {
+              project.tasks = project.tasks.filter((item) => item.id !== task.id);
+              saveState();
+              renderAll(false);
+              setTip("任务已删除。", "ok");
+            });
+          }
+
+          const editBtn = card.querySelector('[data-action="edit-task"]');
+          if (editBtn) {
+            editBtn.addEventListener("click", () => {
+              const title = window.prompt(promptText("任务内容："), task.title);
+              if (title === null) return;
+              const owner = window.prompt(promptText("负责人："), task.owner || "");
+              if (owner === null) return;
+              const due = window.prompt(promptText("截止日期（YYYY-MM-DD）："), task.due || today());
+              if (due === null) return;
+              const bucket = window.prompt(promptText("任务类型（today/week）："), task.bucket || "today");
+              if (bucket === null) return;
+              task.title = title.trim() || task.title;
+              task.owner = owner.trim() || task.owner;
+              task.due = due.trim() || task.due;
+              task.bucket = bucket.trim() === "week" ? "week" : "today";
+              saveState();
+              renderAll(false);
+              setTip("任务已更新。", "ok");
+            });
+          }
+
+          if (state.adminUnlocked) {
+            card.classList.add("draggable");
+            card.draggable = true;
+
+            card.addEventListener("dragstart", () => {
+              state.draggingTaskId = task.id;
+              card.classList.add("dragging");
+            });
+
+            card.addEventListener("dragover", (event) => {
+              if (!state.draggingTaskId || state.draggingTaskId === task.id) return;
+              event.preventDefault();
+              card.classList.add("drop-target");
+            });
+
+            card.addEventListener("dragleave", () => {
+              card.classList.remove("drop-target");
+            });
+
+            card.addEventListener("drop", (event) => {
+              event.preventDefault();
+              const sourceId = state.draggingTaskId;
+              clearTaskDropStates();
+              if (!sourceId || sourceId === task.id) return;
+              moveTask(project, sourceId, task.id, task.bucket);
+            });
+
+            card.addEventListener("dragend", () => {
+              clearTaskDropStates();
+            });
+          }
+
+          return card;
+        };
+
+        const renderTasks = (project) => {
+          const todayTasks = project.tasks.filter((task) => task.bucket === "today");
+          const weekTasks = project.tasks.filter((task) => task.bucket === "week");
+
+          todayTaskList.innerHTML = "";
+          weekTaskList.innerHTML = "";
+
+          if (todayTasks.length === 0) {
+            todayTaskList.innerHTML = '<div class="muted">今日无任务。</div>';
+          } else {
+            todayTasks.forEach((task) => todayTaskList.appendChild(makeTaskCard(task, project)));
+          }
+
+          if (weekTasks.length === 0) {
+            weekTaskList.innerHTML = '<div class="muted">本周无关键任务。</div>';
+          } else {
+            weekTasks.forEach((task) => weekTaskList.appendChild(makeTaskCard(task, project)));
+          }
+
+          const bindDrop = (container, bucket) => {
+            container.ondragover = (event) => {
+              if (!state.adminUnlocked || !state.draggingTaskId) return;
+              event.preventDefault();
+              container.classList.add("drag-target");
+            };
+
+            container.ondragleave = () => {
+              container.classList.remove("drag-target");
+            };
+
+            container.ondrop = (event) => {
+              if (!state.adminUnlocked || !state.draggingTaskId) return;
+              event.preventDefault();
+              const sourceId = state.draggingTaskId;
+              clearTaskDropStates();
+              moveTask(project, sourceId, "", bucket);
+            };
+          };
+
+          bindDrop(todayTaskList, "today");
+          bindDrop(weekTaskList, "week");
+        };
+
+        const renderIssues = (project) => {
+          if (issueActionHeader) issueActionHeader.hidden = !state.adminUnlocked;
+          issueTableBody.innerHTML = "";
+
+          project.issues.forEach((issue) => {
+            const row = document.createElement("tr");
+            const statusNode = state.adminUnlocked
+              ? `<select class="select" data-issue-status="${issue.id}">
+                  <option ${issue.status === "待处理" ? "selected" : ""}>待处理</option>
+                  <option ${issue.status === "处理中" ? "selected" : ""}>处理中</option>
+                  <option ${issue.status === "已解决" ? "selected" : ""}>已解决</option>
+                  <option ${issue.status === "已关闭" ? "selected" : ""}>已关闭</option>
+                </select>`
+              : issue.status;
+
+            row.innerHTML = `
+              <td data-label="标题">${issue.title}</td>
+              <td data-label="类型">${issue.type}</td>
+              <td data-label="责任人">${issue.owner}</td>
+              <td data-label="状态">${statusNode}</td>
+              <td data-label="截止">${issue.due}</td>
+              <td data-label="影响工期">${issue.impact ? "是" : "否"}</td>
+              <td data-label="描述">${issue.desc}</td>
+              ${
+                state.adminUnlocked
+                  ? `<td data-label="操作"><button class="mini-btn" data-edit-issue="${issue.id}" type="button">编辑</button> <button class="danger-btn mini-btn" data-delete-issue="${issue.id}" type="button">删除</button></td>`
+                  : ""
+              }
+            `;
+
+            const statusSelect = row.querySelector("[data-issue-status]");
+            if (statusSelect) {
+              statusSelect.addEventListener("change", (event) => {
+                issue.status = event.target.value;
+                saveState();
+                renderAll(false);
+              });
+            }
+
+            const delBtn = row.querySelector("[data-delete-issue]");
+            if (delBtn) {
+              delBtn.addEventListener("click", () => {
+                project.issues = project.issues.filter((item) => item.id !== issue.id);
+                saveState();
+                renderAll(false);
+                setTip("问题已删除。", "ok");
+              });
+            }
+
+            const editBtn = row.querySelector("[data-edit-issue]");
+            if (editBtn) {
+              editBtn.addEventListener("click", () => {
+                const title = window.prompt(promptText("问题标题："), issue.title);
+                if (title === null) return;
+                const type = window.prompt(promptText("类型："), issue.type);
+                if (type === null) return;
+                const owner = window.prompt(promptText("责任人："), issue.owner);
+                if (owner === null) return;
+                const due = window.prompt(promptText("截止日期（YYYY-MM-DD）："), issue.due);
+                if (due === null) return;
+                const desc = window.prompt(promptText("问题描述："), issue.desc);
+                if (desc === null) return;
+                issue.title = title.trim() || issue.title;
+                issue.type = type.trim() || issue.type;
+                issue.owner = owner.trim() || issue.owner;
+                issue.due = due.trim() || issue.due;
+                issue.desc = desc.trim() || issue.desc;
+                saveState();
+                renderAll(false);
+                setTip("问题已更新。", "ok");
+              });
+            }
+
+            issueTableBody.appendChild(row);
+          });
+
+          if (project.issues.length === 0) {
+            issueTableBody.innerHTML = `<tr><td data-label="提示" colspan="${state.adminUnlocked ? 8 : 7}">暂无问题记录。</td></tr>`;
+          }
+        };
+
+        const renderLogs = (project) => {
+          logList.innerHTML = "";
+          if (project.logs.length === 0) {
+            logList.innerHTML = '<div class="muted">暂无现场日志。</div>';
+            return;
+          }
+
+          [...project.logs]
+            .sort((a, b) => String(b.date).localeCompare(String(a.date)))
+            .forEach((log) => {
+              const card = document.createElement("article");
+              card.className = "log-card";
+              card.innerHTML = `
+                <div class="log-head">
+                  <h4 class="log-title">${log.date} · ${log.stage}</h4>
+                  ${log.followUp ? '<span class="tag urgent">需跟进</span>' : '<span class="tag">已记录</span>'}
+                </div>
+                <p class="muted">记录人：${log.author}</p>
+                <p>${log.content}</p>
+                <div class="photo-strip">
+                  ${(log.photos || [])
+                    .map((p) =>
+                      p && p.url
+                        ? `<a class="photo-chip" href="${p.url}" target="_blank" rel="noopener">📷 ${p.name}</a>`
+                        : `<span class="photo-chip">📷 ${p?.name || "Photo"}</span>`
+                    )
+                    .join("")}
+                </div>
+                ${
+                  state.adminUnlocked
+                    ? `<div class="form-actions" style="margin-top:8px">
+                        <button class="mini-btn" data-edit-log="${log.id}" type="button">编辑</button>
+                        <button class="danger-btn mini-btn" data-delete-log="${log.id}" type="button">删除</button>
+                      </div>`
+                    : ""
+                }
+              `;
+
+              const editBtn = card.querySelector("[data-edit-log]");
+              if (editBtn) {
+                editBtn.addEventListener("click", () => {
+                  const date = window.prompt(promptText("日期（YYYY-MM-DD）："), log.date || today());
+                  if (date === null) return;
+                  const stage = window.prompt(promptText("所属阶段："), log.stage || "");
+                  if (stage === null) return;
+                  const author = window.prompt(promptText("记录人："), log.author || "");
+                  if (author === null) return;
+                  const content = window.prompt(promptText("记录内容："), log.content || "");
+                  if (content === null) return;
+                  log.date = date.trim() || log.date;
+                  log.stage = stage.trim() || log.stage;
+                  log.author = author.trim() || log.author;
+                  log.content = content.trim() || log.content;
+                  saveState();
+                  renderAll(false);
+                  setTip("现场记录已更新。", "ok");
+                });
+              }
+
+              const deleteBtn = card.querySelector("[data-delete-log]");
+              if (deleteBtn) {
+                deleteBtn.addEventListener("click", async () => {
+                  let cleanupFailed = false;
+                  try {
+                    await removeProgressStoragePaths(
+                      (log.photos || []).map((item) => item?.path).filter(Boolean)
+                    );
+                  } catch (error) {
+                    cleanupFailed = true;
+                    console.warn("Log photo cleanup failed:", error);
+                  }
+                  project.logs = project.logs.filter((item) => item.id !== log.id);
+                  saveState();
+                  renderAll(false);
+                  setTip(
+                    cleanupFailed
+                      ? "现场记录已删除，但部分图片清理失败。 / Log deleted, but some photo cleanup failed."
+                      : "现场记录已删除。",
+                    cleanupFailed ? "warn" : "ok"
+                  );
+                });
+              }
+              logList.appendChild(card);
+            });
+        };
+
+        const renderMaterials = (project) => {
+          if (materialActionHeader) materialActionHeader.hidden = !state.adminUnlocked;
+          materialTableBody.innerHTML = "";
+          project.materials.forEach((item) => {
+            const row = document.createElement("tr");
+
+            const editable = (field, value, options) => {
+              if (!state.adminUnlocked) return value || "-";
+              if (options) {
+                return `<select class="select" data-material-id="${item.id}" data-material-field="${field}">${options
+                  .map((opt) => `<option ${opt === value ? "selected" : ""}>${opt}</option>`)
+                  .join("")}</select>`;
+              }
+              return `<input class="input" data-material-id="${item.id}" data-material-field="${field}" value="${value || ""}" />`;
+            };
+
+            row.innerHTML = `
+              <td data-label="材料">${editable("name", item.name)}</td>
+              <td data-label="规格">${editable("spec", item.spec)}</td>
+              <td data-label="数量">${editable("qty", item.qty)}</td>
+              <td data-label="供应商">${editable("supplier", item.supplier)}</td>
+              <td data-label="下单">${editable("orderStatus", item.orderStatus, ["待确认", "待采购", "已下单"])}</td>
+              <td data-label="到货">${editable("arrivalStatus", item.arrivalStatus, ["待到货", "已到货"])}</td>
+              <td data-label="安装">${editable("installStatus", item.installStatus, ["待安装", "已安装"])}</td>
+              <td data-label="负责人">${editable("owner", item.owner)}</td>
+              <td data-label="预计到场">${editable("eta", item.eta)}</td>
+              ${state.adminUnlocked ? `<td data-label="操作"><button class="danger-btn mini-btn" data-delete-material="${item.id}" type="button">删除</button></td>` : ""}
+            `;
+
+            row.querySelectorAll("[data-material-field]").forEach((input) => {
+              input.addEventListener("change", (event) => {
+                const id = event.target.getAttribute("data-material-id");
+                const field = event.target.getAttribute("data-material-field");
+                const target = project.materials.find((material) => material.id === id);
+                if (!target) return;
+                target[field] = event.target.value;
+                saveState();
+                renderAll(false);
+              });
+            });
+
+            const delBtn = row.querySelector("[data-delete-material]");
+            if (delBtn) {
+              delBtn.addEventListener("click", () => {
+                project.materials = project.materials.filter((material) => material.id !== item.id);
+                saveState();
+                renderAll(false);
+                setTip("材料项已删除。", "ok");
+              });
+            }
+
+            materialTableBody.appendChild(row);
+          });
+
+          if (project.materials.length === 0) {
+            materialTableBody.innerHTML = `<tr><td data-label="提示" colspan="${state.adminUnlocked ? 10 : 9}">暂无材料记录。</td></tr>`;
+          }
+        };
+
+        const renderFiles = (project) => {
+          fileList.innerHTML = "";
+          if (project.files.length === 0) {
+            fileList.innerHTML = '<div class="muted">暂无文件。</div>';
+            return;
+          }
+
+          const sorted = [...project.files].sort((a, b) => String(b.uploadedAt).localeCompare(String(a.uploadedAt)));
+          sorted.forEach((file) => {
+            const card = document.createElement("article");
+            card.className = "file-card";
+            card.innerHTML = `
+              <div class="file-head">
+                <h4 class="file-title">${file.name}</h4>
+                ${file.latest ? '<span class="tag done">最新版</span>' : '<span class="tag">历史版</span>'}
+              </div>
+              <p class="muted">${file.type} ｜ ${file.version} ｜ 上传人 ${file.uploader} ｜ ${file.uploadedAt}</p>
+              <div class="file-strip">
+                <a class="file-chip" href="${file.url || "#"}" target="_blank" rel="noopener">📎 打开</a>
+                ${state.adminUnlocked ? `<button class="mini-btn" data-edit-file="${file.id}" type="button">编辑</button>` : ""}
+                ${state.adminUnlocked ? `<button class="mini-btn" data-set-latest="${file.id}" type="button">设为最新版</button>` : ""}
+                ${state.adminUnlocked ? `<button class="danger-btn mini-btn" data-delete-file="${file.id}" type="button">删除</button>` : ""}
+              </div>
+            `;
+
+            const editBtn = card.querySelector("[data-edit-file]");
+            if (editBtn) {
+              editBtn.addEventListener("click", () => {
+                const type = window.prompt(promptText("文件类型："), file.type || "文件");
+                if (type === null) return;
+                const version = window.prompt(promptText("版本号："), file.version || "v1");
+                if (version === null) return;
+                const uploader = window.prompt(promptText("上传人："), file.uploader || "");
+                if (uploader === null) return;
+                file.type = type.trim() || file.type;
+                file.version = version.trim() || file.version;
+                file.uploader = uploader.trim() || file.uploader;
+                saveState();
+                renderAll(false);
+                setTip("文件记录已更新。", "ok");
+              });
+            }
+
+            const latestBtn = card.querySelector("[data-set-latest]");
+            if (latestBtn) {
+              latestBtn.addEventListener("click", () => {
+                project.files.forEach((item) => {
+                  item.latest = item.id === file.id;
+                });
+                saveState();
+                renderAll(false);
+                setTip("已更新最新版标记。", "ok");
+              });
+            }
+
+            const delBtn = card.querySelector("[data-delete-file]");
+            if (delBtn) {
+              delBtn.addEventListener("click", async () => {
+                let cleanupFailed = false;
+                try {
+                  await removeProgressStoragePaths([file.path]);
+                } catch (error) {
+                  cleanupFailed = true;
+                  console.warn("File storage cleanup failed:", error);
+                }
+                project.files = project.files.filter((item) => item.id !== file.id);
+                saveState();
+                renderAll(false);
+                setTip(
+                  cleanupFailed
+                    ? "文件记录已删除，但云端文件清理失败。 / File record deleted, but cloud cleanup failed."
+                    : "文件记录已删除。",
+                  cleanupFailed ? "warn" : "ok"
+                );
+              });
+            }
+
+            fileList.appendChild(card);
+          });
+        };
+
+        const renderProjectCockpit = () => {
+          const project = getSelectedProject();
+          if (!project) {
+            projectTitle.textContent = "暂无项目";
+            projectSubtitle.textContent = "请先新增项目。";
+            return;
+          }
+
+          projectTitle.textContent = project.name;
+          projectSubtitle.textContent = `客户：${project.client} ｜ 地址：${project.address} ｜ 项目经理：${project.manager}`;
+          renderKpis(project);
+          renderOverview(project);
+          renderTasks(project);
+          renderIssues(project);
+          renderLogs(project);
+          renderMaterials(project);
+          renderFiles(project);
+        };
+
+        const setActiveTab = (tab) => {
+          state.activeTab = tab;
+          document.querySelectorAll(".tab-btn").forEach((btn) => {
+            btn.classList.toggle("active", btn.getAttribute("data-tab") === tab);
+          });
+          document.querySelectorAll(".tab-pane").forEach((pane) => {
+            pane.classList.toggle("active", pane.getAttribute("data-pane") === tab);
+          });
+        };
+
+        const ensureAdmin = () => {
+          if (state.adminUnlocked) return true;
+          setTip("当前为只读模式，请先开启管理员模式后再录入。", "warn");
+          return false;
+        };
+
+        const bindEvents = () => {
+          projectSearch.addEventListener("input", (event) => {
+            state.search = event.target.value;
+            renderAll();
+          });
+
+          statusFilter.addEventListener("change", (event) => {
+            state.statusFilter = event.target.value;
+            renderAll();
+          });
+
+          if (refreshNegotiationCandidatesBtn) {
+            refreshNegotiationCandidatesBtn.addEventListener("click", () => {
+              refreshNegotiationCandidates(true).catch((error) => {
+                console.warn("刷新洽谈候选项目失败", error);
+                setTip("洽谈候选项目刷新失败，请稍后重试。", "warn");
+              });
+            });
+          }
+
+          if (toggleSelectAllNegotiationBtn) {
+            toggleSelectAllNegotiationBtn.addEventListener("click", () => {
+              toggleSelectAllNegotiationCandidates();
+            });
+          }
+
+          if (addSelectedNegotiationProjectsBtn) {
+            addSelectedNegotiationProjectsBtn.addEventListener("click", () => {
+              addSelectedNegotiationProjects();
+            });
+          }
+
+          adminToggle.addEventListener("click", () => {
+            if (state.adminUnlocked) {
+              state.adminUnlocked = false;
+              syncAdminToggleState();
+              setTip("已退出管理员模式。", "ok");
+              renderAll(false);
+              return;
+            }
+
+            if (isAdminSessionActive()) {
+              state.adminUnlocked = true;
+              syncAdminToggleState();
+              setTip("管理员模式已开启（30天免密有效）。", "ok");
+              renderAll(false);
+              return;
+            }
+
+            const inputPassword = window.prompt(promptText("请输入管理员密码："));
+            if (inputPassword === null) return;
+            if (inputPassword !== ADMIN_PASSWORD) {
+              setTip("密码错误，无法进入管理员模式。", "warn");
+              return;
+            }
+            state.adminUnlocked = true;
+            persistAdminSession();
+            syncAdminToggleState();
+            setTip("管理员模式已开启，30天内无需重新输入密码。", "ok");
+            renderAll(false);
+          });
+
+          tabBar.addEventListener("click", (event) => {
+            const btn = event.target.closest(".tab-btn");
+            if (!btn) return;
+            setActiveTab(btn.getAttribute("data-tab"));
+          });
+
+          quickButtons.forEach((btn) => {
+            btn.addEventListener("click", () => {
+              const action = btn.getAttribute("data-action");
+              if (action === "project-create") {
+                createProject();
+                return;
+              }
+              if (action === "project-edit") {
+                editSelectedProject();
+                return;
+              }
+              if (action === "project-delete") {
+                deleteSelectedProject();
+                return;
+              }
+              if (action === "stage-add") {
+                addStageToProject();
+                return;
+              }
+
+              const map = {
+                task: "tasks",
+                issue: "issues",
+                log: "logs",
+                file: "assets",
+              };
+              setActiveTab(map[action] || "overview");
+              if (action === "task") forms.task.querySelector('[name="title"]').focus();
+              if (action === "issue") forms.issue.querySelector('[name="title"]').focus();
+              if (action === "log") forms.log.querySelector('[name="content"]').focus();
+              if (action === "file") forms.file.querySelector('[name="version"]').focus();
+            });
+          });
+
+          stageTableBody.addEventListener("change", (event) => {
+            const input = event.target;
+            const stageId = input.getAttribute("data-stage-id");
+            const field = input.getAttribute("data-stage-field");
+            if (!stageId || !field || !state.adminUnlocked) return;
+            const project = getSelectedProject();
+            if (!project) return;
+            const target = project.stages.find((item) => item.id === stageId);
+            if (!target) return;
+            target[field] = input.value;
+            if (field === "status" && input.value === "已完成" && !target.actualEnd) {
+              target.actualEnd = today();
+            }
+            saveState();
+            renderAll(false);
+            setTip("阶段信息已更新。", "ok");
+          });
+
+          forms.task.addEventListener("submit", (event) => {
+            event.preventDefault();
+            if (!ensureAdmin()) return;
+            const project = getSelectedProject();
+            if (!project) return;
+            const form = new FormData(forms.task);
+            project.tasks.unshift({
+              id: toId(),
+              title: String(form.get("title") || "").trim(),
+              owner: String(form.get("owner") || "").trim(),
+              due: String(form.get("due") || "").trim(),
+              bucket: String(form.get("bucket") || "today"),
+              done: false,
+              impact: form.get("impact") !== null,
+              needMe: form.get("needMe") !== null,
+            });
+            saveState();
+            forms.task.reset();
+            setTip("任务已新增。", "ok");
+            renderAll(false);
+          });
+
+          forms.issue.addEventListener("submit", (event) => {
+            event.preventDefault();
+            if (!ensureAdmin()) return;
+            const project = getSelectedProject();
+            if (!project) return;
+            const form = new FormData(forms.issue);
+            project.issues.unshift({
+              id: toId(),
+              title: String(form.get("title") || "").trim(),
+              type: String(form.get("type") || "材料"),
+              owner: String(form.get("owner") || "").trim(),
+              due: String(form.get("due") || ""),
+              desc: String(form.get("desc") || "").trim(),
+              createdAt: today(),
+              status: "待处理",
+              impact: form.get("impact") !== null,
+            });
+            saveState();
+            forms.issue.reset();
+            setTip("问题已登记。", "ok");
+            renderAll(false);
+          });
+
+          forms.log.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            if (!ensureAdmin()) return;
+            const project = getSelectedProject();
+            if (!project) return;
+            const form = new FormData(forms.log);
+            const photoInput = forms.log.querySelector('[name="photos"]');
+            const photoFiles = Array.from(photoInput.files || []);
+            let photos = [];
+
+            if (photoFiles.length > 0) {
+              if (supabaseClient) {
+                try {
+                  for (const file of photoFiles) {
+                    const uploaded = await uploadProgressStorageFile(project.id, "logs", file);
+                    photos.push({
+                      name: uploaded.name,
+                      type: uploaded.type || "",
+                      url: uploaded.url || "",
+                      path: uploaded.path || "",
+                    });
+                  }
+                } catch (error) {
+                  setTip(`日志图片上传失败：${error.message || "未知错误"} / Log photo upload failed.`, "warn");
+                  return;
+                }
+              } else {
+                photos = photoFiles.map((file) => ({
+                  name: file.name,
+                  type: file.type || "",
+                  url: URL.createObjectURL(file),
+                  path: "",
+                  local: true,
+                }));
+              }
+            }
+
+            project.logs.unshift({
+              id: toId(),
+              date: String(form.get("date") || today()),
+              author: String(form.get("author") || "").trim(),
+              stage: String(form.get("stage") || "现场"),
+              content: String(form.get("content") || "").trim(),
+              followUp: form.get("followUp") !== null,
+              photos,
+            });
+            saveState();
+            forms.log.reset();
+            setTip("现场记录已提交。", "ok");
+            renderAll(false);
+          });
+
+          forms.material.addEventListener("submit", (event) => {
+            event.preventDefault();
+            if (!ensureAdmin()) return;
+            const project = getSelectedProject();
+            if (!project) return;
+            const form = new FormData(forms.material);
+            project.materials.unshift({
+              id: toId(),
+              name: String(form.get("name") || "").trim(),
+              spec: String(form.get("spec") || "").trim(),
+              qty: String(form.get("qty") || "").trim(),
+              supplier: String(form.get("supplier") || "").trim(),
+              orderStatus: String(form.get("orderStatus") || "待确认"),
+              arrivalStatus: String(form.get("arrivalStatus") || "待到货"),
+              installStatus: String(form.get("installStatus") || "待安装"),
+              owner: String(form.get("owner") || "").trim(),
+              eta: String(form.get("eta") || ""),
+            });
+            saveState();
+            forms.material.reset();
+            setTip("材料项已新增。", "ok");
+            renderAll(false);
+          });
+
+          forms.file.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            if (!ensureAdmin()) return;
+            const project = getSelectedProject();
+            if (!project) return;
+            const form = new FormData(forms.file);
+            const fileInput = forms.file.querySelector('[name="file"]');
+            const file = fileInput.files[0];
+            if (!file) {
+              setTip("请先选择文件。", "warn");
+              return;
+            }
+
+            const latest = form.get("latest") !== null;
+            if (latest) {
+              project.files.forEach((item) => {
+                if (item.type === String(form.get("type") || "")) {
+                  item.latest = false;
+                }
+              });
+            }
+
+            let uploadedFile;
+            try {
+              uploadedFile = await uploadProgressStorageFile(project.id, "files", file);
+            } catch (error) {
+              setTip(`文件上传失败：${error.message || "未知错误"} / File upload failed.`, "warn");
+              return;
+            }
+
+            project.files.unshift({
+              id: toId(),
+              name: uploadedFile?.name || file.name,
+              type: String(form.get("type") || "文件"),
+              version: String(form.get("version") || "v1"),
+              uploader: String(form.get("uploader") || "").trim(),
+              uploadedAt: today(),
+              latest,
+              url: uploadedFile?.url || URL.createObjectURL(file),
+              path: uploadedFile?.path || "",
+            });
+            saveState();
+            forms.file.reset();
+            setTip("文件记录已新增。", "ok");
+            renderAll(false);
+          });
+        };
+
+        const renderAll = (renderList = true) => {
+          if (renderList) renderProjectList();
+          renderProjectCockpit();
+          setActiveTab(state.activeTab);
+          if (window.__davI18n && window.__davI18n.localizeDOM) {
+            window.__davI18n.localizeDOM();
+          }
+        };
+
+        const initialize = async () => {
+          await loadState();
+          const queuedImportSummary = importQueuedNegotiationProjects();
+          bindEvents();
+          renderAll();
+
+          if (supabaseClient) {
+            refreshNegotiationCandidates(false).catch((error) => {
+              console.warn("初始化洽谈候选项目失败", error);
+            });
+          }
+
+          if (queuedImportSummary.insertedCount > 0 || queuedImportSummary.linkedCount > 0) {
+            const parts = [];
+            if (queuedImportSummary.insertedCount > 0) parts.push(`新增 ${queuedImportSummary.insertedCount} 个 / Added ${queuedImportSummary.insertedCount}`);
+            if (queuedImportSummary.linkedCount > 0) parts.push(`关联 ${queuedImportSummary.linkedCount} 个 / Linked ${queuedImportSummary.linkedCount}`);
+            setTip(`已从洽谈页面导入项目到总控中心（${parts.join("，")}） / Imported from negotiation page.`, "ok");
+          } else if (supabaseClient && supportsProgressTable) {
+            setTip("已加载进展中项目总控中心，Supabase 已连接。 / Control center loaded with Supabase.", "ok");
+          } else {
+            setTip("已加载进展中项目总控中心。非管理员为只读模式。 / Control center loaded (read-only for non-admin).", "ok");
+          }
+        };
+
+        initialize().catch((error) => {
+          console.error("初始化总控中心失败", error);
+          bindEvents();
+          renderAll();
+          setTip(`初始化失败：${error.message || "未知错误"} / Initialization failed.`, "warn");
+        });
+      })();
+    </script>
+  </body>
+</html>
